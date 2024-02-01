@@ -1,0 +1,214 @@
+{% liquid
+  assign base_name = base_name | default: 'image-with-text'
+%}
+
+<div
+  {% if section.settings.link %}
+    id="{{ section.settings.link }}"
+  {% endif %}
+  class="max-container image-with-text__container plain-text-container"
+>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'text' %}
+        {%- if block.settings.heading != blank -%}
+          {%- if block.settings.link_heading != blank -%}
+            <h2 id="{{ block.settings.link_heading }}" class="{{ base_name }}__heading">{{ block.settings.heading | escape }}</h2>
+          {% else %}
+            <h2 class="{{ base_name }}__heading">{{ block.settings.heading | escape }}</h2>
+          {%- endif -%}
+        {% endif %}
+        {% if block.settings.heading_small %}
+          {%- if block.settings.link_small_heading != blank -%}
+            <h3 id="{{ block.settings.link_small_heading }}">{{ block.settings.heading_small | escape }}</h3>
+          {% else %}
+            <h3>{{ block.settings.heading_small | escape }}</h3>
+          {%- endif -%}
+        {% endif %}
+        {% if block.settings.text %}
+          <p>{{ block.settings.text }}</p>
+        {% endif %}
+        {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+          <a href="{{ block.settings.button_link }}" class="btn btn-main custom-btn">{{ block.settings.button_text }}</a>
+        {% endif %}
+
+      {% when 'Compare' %}
+        {% render 'compare-blog-snip', block: block %}
+
+      {% when 'Ifazit' %}
+        <div class="image-facit">
+          <div class="{{ base_name }}__container ">
+            <div class="{{ base_name }}__image-wrapper">
+              {%- if block.settings.image != blank -%}
+                {% assign alt = block.settings.image.alt | default: 'Wallando Blog Heading' %}
+                {% assign crop = crop | default: 'center' %}
+                {% capture image_classes %}{{ base_name }}__image{% endcapture %}
+                {%
+                  render 'rimg'
+                  img: block.settings.image,
+                  alt: alt,
+                  size: '1500x',
+                  lazy: true,
+                  crop: crop,
+                  class: image_classes,
+                %}
+              {%- else -%}
+                {% capture placeholder_classes %}{{ base_name }}__image {{ base_name }}__placeholder{% endcapture %}
+                {{ 'lifestyle-1' | placeholder_svg_tag: placeholder_classes }}
+              {%- endif -%}
+            </div>
+            <div class="{{ base_name }}__content">
+              {%- if block.settings.heading != blank -%}
+                <div class="{{ base_name }}__content-wrapper">
+                  {%- if block.settings.heading != blank -%}
+                    <h2 class="{{ base_name }}__heading article-h1">{{ block.settings.heading | escape }}</h2>
+                  {%- endif -%}
+                  {% if block.settings.text %}
+                    <p>{{ block.settings.text }}</p>
+                  {% endif %}
+                  {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+                    <a href="{{ block.settings.button_link }}" class="btn">{{ block.settings.button_text }}</a>
+                  {% endif %}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+      {% when 'Hfazit' %}
+        <div class="{{ base_name }}__container header-facit-container">
+          <div class="{{ base_name }}__image-wrapper">
+            {%- if block.settings.heading != blank -%}
+              <h2 class="{{ base_name }}__heading article-h1">{{ block.settings.heading | escape }}</h2>
+            {%- endif -%}
+          </div>
+          <div class="{{ base_name }}__content">
+            {%- if block.settings.heading != blank -%}
+              <div class="{{ base_name }}__content-wrapper">
+                {% if block.settings.text %}
+                  <p>{{ block.settings.text }}</p>
+                {% endif %}
+                {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+                  <a href="{{ block.settings.button_link }}" class="btn btn-main custom-btn">{{ block.settings.button_text }}</a>
+                {% endif %}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+    {% endcase %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Blog Post",
+  "class": "shopify-section--image-with-text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "link",
+      "label": "Link to Inhalt"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Blog",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+          "type": "text",
+          "id": "link_heading",
+          "label": "Link to Heading"
+        },
+        {
+          "type": "text",
+          "id": "heading_small",
+          "label": "Heading Small"
+        },
+        {
+          "type": "text",
+          "id": "link_small_heading",
+          "label": "Link to Heading Small"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    },
+    {
+      "type": "Compare",
+      "name": "Compare Blog",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "vorteile_one",
+          "label": "Vorteile 1",
+          "info": "Optional"
+        }
+      ]
+    },
+    {
+      "type": "Hfazit",
+      "name": "Header Fazit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "Ifazit",
+      "name": "Image Fazit",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Lorem"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Blog Post"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,165 @@
+{% liquid
+  assign image = section.settings.image
+  assign image_two = section.settings.image_two
+  assign image_three = section.settings.image_three
+  assign image_four = section.settings.image_four
+  assign image_five = section.settings.image_five
+  assign image_six = section.settings.image_six
+  assign image_payment = section.settings.image_payment
+%} 
+ 
+  
+ <!-- Product  -->
+ <div class="max-container-pd" id="custom-product">
+  <div class="container_center product-box">
+    <div class="product-container">
+      <div class="small-image">
+{% comment %}
+        <p class="small-image__text">Weitere enthaltene Farben in deinem Musterpaket:</p>
+{% endcomment %}
+        {%
+          render 'rimg'
+          img: image_two,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+        {%
+          render 'rimg'
+          img: image_three,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+        {%
+          render 'rimg'
+          img: image_four,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+        {%
+          render 'rimg'
+          img: image_five,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+        {%
+          render 'rimg'
+          img: image_six,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+      </div>
+      <div class="big-image">
+        {%
+          render 'rimg'
+          img: image,
+          alt: alt,
+          size: '1500x',
+          lazy: false,
+          crop: crop,
+          class: 'left-fold-logo'
+        %}
+      </div>
+      <div class="content">
+        <h2>Kostenloses Musterpaket</h2>
+        <p style="color:#00562d">
+         <strong>&#183; </strong> Auf Lager - in 2-3 Tagen bei dir</p>
+         <div class="btn btn-main custom-btn">
+          <a href="http://wallando-design.myshopify.com/cart/41910320562435:1">Jetzt kostenlos bestellen</a>
+        </div>
+
+        <img loading="lazy" style="width: 100%;"src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/trustbadge_rheienfolge.png?v=1634688120" alt="">
+
+        <p class="payment-info">
+          Lediglich die Versandkosten von 4.90€ werden berechnet
+        </p>
+        <div class="content-bottom">
+          <img loading="lazy" src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/muscular-gymnast-arm-muscles-show.png?v=1634688120" alt="">
+          <p>Sehr langlebig & Farben können nicht verblassen</p>
+        </div>
+        <div class="content-bottom">
+         
+          <img loading="lazy"  src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/Haptik.png?v=1634827471" alt="">
+
+          <p>Echte Oberflächenhaptik</p>
+        </div>
+        <div class="content-bottom">
+          <img loading="lazy"  src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/quality_1.png?v=1634656778" alt="">
+          <p>Geruchslos und kann nicht ausdunsten</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Custom Product",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_two",
+      "label": "Image Two"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_three",
+      "label": "Image Three"
+    }
+    ,
+    {
+      "type": "image_picker",
+      "id": "image_four",
+      "label": "Image Four"
+    },{
+      "type": "image_picker",
+      "id": "image_five",
+      "label": "Image Five"
+    },{
+      "type": "image_picker",
+      "id": "image_six",
+      "label": "Image Six"
+    },
+	{
+      "type": "image_picker",
+      "id": "image_payment",
+      "label": "Image Payment"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product",
+      "category": "custom",
+      "settings": {}
+    }
+  ],
+  "templates": [
+    "index",
+    "product",
+    "collection",
+    "page"
+  ]
+}
+
+{% endschema %}

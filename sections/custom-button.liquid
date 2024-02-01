@@ -1,0 +1,69 @@
+
+<div class="max-container align-center">
+
+  
+   <form method="post" action="/cart/add" style="display:none;">
+  <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+  <input type="submit" value="Add to cart" class="btn btn-main custom-btn" />
+</form>
+</div>
+
+<style>
+  
+  .btn-main {
+   margin: 1rem;
+    font-family: Helvetica,'Helvetica Neue',Arial,'Lucida Grande',sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 1.4;
+    color: #fff;
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    background-color: #1c395a;
+    border: 1px solid #1c395a;
+    outline: 0;
+    transition: border-color .2s ease-out,background-color .2s ease-out,color .2s ease-out,box-shadow .2s ease-out;
+    padding: 0.75rem 1rem;
+    font-size: 1.125rem;
+    position: relative;
+    width: 100%;
+    padding: 1rem 1.5rem;
+  }
+  .btn-main:hover {
+  
+   	color: #fff;
+    background-color: #305074;
+    border: 1px solid #305074;
+    box-shadow: 0 4px 16px 1px rgb(0 0 0 / 25%); 
+  }
+</style>
+
+  {% schema %}
+  {
+    "name": "Custom Button",
+    "settings": [
+    {
+      "type": "text",
+      "id": "custom_button",
+      "label": "Text Button"
+    }
+    ],
+    "presets": [
+      {
+        "name": "Custom Button",
+        "category": "custom",
+        "settings": {}
+      }
+    ],
+    "templates": [
+      "index",
+      "product",
+      "collection",
+      "page"
+    ]
+  }
+  
+  {% endschema %}

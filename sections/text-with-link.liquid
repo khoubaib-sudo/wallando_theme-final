@@ -1,0 +1,109 @@
+{% liquid
+  assign base_name = base_name | default: 'text-with-link'
+%}
+
+<div id="text-with-link__container" class="article image-with-text__container">
+  <div class="text-with-link">
+    {%- if section.settings.heading != blank -%}
+      <p class="{{ base_name }}__heading">{{ section.settings.heading | escape }}</p>
+    {%- endif -%}
+
+    <ul>
+      {% for block in section.blocks %}
+        {% assign heading_tag = block.settings.heading_tag | default: 'p' %}
+
+        {% if block.settings.inhalt != blank %}
+          {%- if block.settings.link != blank -%}
+            <p>
+              <a href="#{{ block.settings.link }}">{{ block.settings.inhalt }}</a>
+            </p>
+          {%- endif -%}
+        {% endif %}
+
+        {% if block.settings.inhalt_two != blank %}
+          {%- if block.settings.link_two != blank -%}
+            <p class="inhalt_two-container">
+              <a href="#{{ block.settings.link_two }}">{{ block.settings.inhalt_two }}</a>
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+
+        {% if block.settings.inhalt_three != blank %}
+          {%- if block.settings.link_three != blank -%}
+            <p class="inhalt_three-container">
+              <a href="#{{ block.settings.link_three }}">{{ block.settings.inhalt_three }}</a>
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text with Link",
+  "class": "shopify-section--image-with-text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Image with text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "inhalt",
+          "label": "Inhalt Item",
+          "default": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "text",
+          "id": "inhalt_two",
+          "label": "Inhalt Item Two"
+        },
+        {
+          "type": "text",
+          "id": "link_two",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "text",
+          "id": "inhalt_three",
+          "label": "Inhalt Item Three"
+        },
+        {
+          "type": "text",
+          "id": "link_three",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading Tag",
+          "options": [
+            {"value": "p", "label": "p"}
+          ],
+          "default": "p"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "text with link"
+    }
+  ]
+}
+{% endschema %}

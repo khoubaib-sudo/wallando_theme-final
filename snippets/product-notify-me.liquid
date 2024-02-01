@@ -1,0 +1,65 @@
+{% if settings.notify_me_form %}
+  <div
+    class="product-notify-form"
+    data-back-in-stock-form
+    data-form-enabled="{% if product.available == false and variant.available == false %}true{% else %}false{% endif %}"
+  >
+    <p class="message"></p>
+    {% form 'contact', class: "product-notify-form__form-element", id: section.id %}
+      {% if form.errors %}
+        {{ form.errors | default_errors }}
+      {% else %}
+        {% if settings.notify_me_description != blank %}
+          <label aria-hidden="true" class="visually-hidden" for="contact[email]">
+            {{ settings.notify_me_description | strip_html }}
+          </label>
+          {{ settings.notify_me_description }}
+        {% endif %}
+
+        {% if product.variants.size > 1 %}
+          {% capture product_variant %} - {{ variant.title }}{% endcapture %}
+        {% endif %}
+
+        <div
+          class="
+          product-notify-form__inputs
+          {% if customer %}
+            product-notify-form--customer-signed-in
+          {% endif %}"
+          {% if customer %}
+            data-customer-email="{{ customer.email }}"
+          {% endif %}
+          data-notify-message="{{ 'products.notify_form.message_content' | t: product: product.title, url: canonical_url }}
+          "
+        >
+
+          <input
+            required
+            type="email"
+            class="product-notify-form__email"
+            name="contact[email]"
+            id="contact[email]"
+            placeholder="{{ 'products.notify_form.email' | t }}"
+            value="{% if customer %}{{ customer.email }}{% else %}{{ contact.fields.email }}{% endif %}"
+          />
+          <input
+            type="hidden"
+            name="challenge"
+            value="false"
+          />
+          <input
+            type="hidden"
+            name="contact[body]"
+            class="product-notify-form__message"
+            value="{{ 'products.notify_form.message_content' | t: product: product.title, url: canonical_url }}{{ product_variant }}"
+          />
+          <input
+            class="product-notify-form__button"
+            type="submit"
+            value="{{ 'products.notify_form.send' | t }}"
+          />
+        </div>
+      {% endif %}
+    {% endform %}
+  </div>
+{% endif %}

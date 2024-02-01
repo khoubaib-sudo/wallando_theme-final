@@ -1,0 +1,83 @@
+{% comment %}
+  Display variant options for a product
+
+  @param selected_variant
+{% endcomment %}
+
+<div class="options-selection__select-wrapper">
+  <div
+    class="options-selection__select"
+  >
+    <label
+      class="options-selection__select-label"
+      for="data-variant-option-{{ option_index }}"
+      data-variant-option-name="{{ option.name }}"
+      data-variant-option-choose-name="{{ 'product.variants.choose_option' | t: option: option.name }}"
+    >
+      {% if selected_variant %}
+        {{ option.name }}
+     
+      {% endif %}
+    </label>
+    <div class="options-selection__input-select-wrapper">
+      <select
+        id="data-variant-option-{{ option_index }}"
+        class="options-selection__input-select"
+        data-variant-option
+        data-variant-option-index="{{ option_index }}"
+        data-variant-option-chosen-value="{% if selected_variant %}{{ option.selected_value }}{% else %}false{% endif %}"
+      >
+       
+        {% for value in option.values %}
+          <option
+            value="{{ value | escape }}"
+            {% if selected_variant and option.selected_value == value %}selected{% endif %}
+            data-variant-option-value-wrapper
+            data-variant-option-value
+            data-variant-option-value-index="{{ option_index }}"
+          >
+            {{ value }}
+          </option>
+        {% endfor %}
+      </select>
+      <div
+        class="options-selection__input-select-chevron"
+      >
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          role="presentation"
+          width="8"
+          height="6"
+          viewBox="0 0 8 6"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M4 4.5L7 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+          <path d="M4 4.5L1 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+        </svg>
+      </div>
+
+    </div>
+    <div class="custom-line-items-wrapper">
+    <div class="height-wrapper">
+      {% if shop.locale == 'de' %}
+      <p>Höhe(in cm): <span class="height-dom"></span>cm</p>
+      {% elsif shop.locale == 'fr' %}
+      <p>Hauteur(en cm):<span class="height-dom"></span>cm</p>
+      {% endif %}
+      
+    </div>
+    <div class="width-wrapper">
+     {% if shop.locale == 'de' %}
+      <p>Breite(in cm): <span class="width-dom"></span>cm</p>
+      {% elsif shop.locale == 'fr' %}
+       <p>Largeur(en cm): <span class="width-dom"></span>cm</p>
+      {% endif %}
+    </div>
+  </div>
+  </div>
+
+</div>
+
+

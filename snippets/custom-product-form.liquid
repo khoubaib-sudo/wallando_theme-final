@@ -1,0 +1,898 @@
+{% assign excluded_product_ids = '8432492413193,8025108054281, 8302582989065, 8025444417801, 8025444253961, 8302583513353, 8302583283977, 8025439994121, 8302583120137, 8302583021833, 8302583349513,8302583316745,8302583218441, 8302583054601 , 8302583152905,8302583087369, 8302583578889,8025439568137, 8302583447817, 8025441141001'
+  | split: ','
+%}
+{% assign current_product_id = product.id | plus: 0 %}
+
+{% assign display_checkbox = true %}
+{% for excluded_id in excluded_product_ids %}
+  {% assign excluded_id_num = excluded_id | plus: 0 %}
+  {% if current_product_id == excluded_id_num %}
+    {% assign display_checkbox = false %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div class="product-form">
+  {% form 'product', product, class: 'product_form_classes', data-product-form: '' %}
+    {% comment %}
+      Display variant options for a product
+
+      @param product
+      @param selected_variant
+      @param style
+
+      @param enable_swatches
+      @param swatches_shape
+      @param swatches_option_trigger
+      @param swatches_option_style
+      @param swatches_product_page_size
+      @param swatch_custom_colors
+    {% endcomment %}
+    {% assign product = product %}
+    {% assign selected_variant = product.selected_variant %}
+    {% if product.variants.size == 1 or settings.select_first_available_variant %}
+      {% assign selected_variant = product.selected_or_first_available_variant %}
+    {% endif %}
+    {% if settings.product_form_style == 'select' %}
+      {% assign style = 'select' %}
+      {% assign enable_swatches = false %}
+    {% else %}
+      {% assign style = 'radio' %}
+      {% assign enable_swatches = true %}
+    {% endif %}
+    {% assign sold_out_options = settings.sold_out_options %}
+    {% assign swatches_shape = 'circle' %}
+    {% assign swatches_option_trigger = settings.swatches_swatch_trigger %}
+    {% assign swatches_option_style = settings.swatches_option_style %}
+    {% assign swatches_product_page_size = settings.swatches_product_page_size %}
+    {% assign swatches_custom_colors = settings.swatches_custom_colors %}
+
+    {% assign hasCustomZuschneiden = false %}
+    {% assign customZuschneidenMax = 250 %}
+    <!-- change customVariantValue to custom value, vb: "Zuschneiden Custom" -->
+    {% assign customVariantValues = 'Individueller Zuschnitt,Découpe individuelle' | split: ',' %}
+
+    {% if product.metafields.custom.custom_max_height %}
+      <!-- check for metafield and use the value as the nex max -->
+      {% assign customZuschneidenMax = product.metafields.custom.custom_max_height %}
+    {% endif %}
+
+    {% for variant in product.variants %}
+      {% if variant.available and customVariantValues contains variant.title %}
+        {% assign hasCustomZuschneiden = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {%- capture add_to_cart_label -%}
+      {% if collection_handles contains 'pre-order' %}
+        {{ 'collections.general.pre_order' | t }}
+      {% else %}
+        {% if product.available or selected_variant.available %}
+          {{ 'products.product.add_to_cart' | t }}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      {% endif %}
+    {%- endcapture -%}
+
+    {% if section.settings.show_payment_button %}
+      {%- assign show_payment_button = true -%}
+    {% elsif show_payment_button_quickshop %}
+      {%- assign show_payment_button = true -%}
+    {% else %}
+      {%- assign show_payment_button = false -%}
+    {% endif %}
+
+    {%- assign checkout_url = '/checkout' -%}
+
+    {% for locale in shop.enabled_locales %}
+      {% if locale.primary == true %}
+        {%- assign defaultLocale = locale.iso_code -%}
+        {% if defaultLocale != request.locale.iso_code %}
+          {%- assign checkout_url = request.locale.iso_code | append: '/checkout' -%}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% comment %}Inject @pixelunion/shopify-variants-ui/variant-selection begin{% endcomment %}
+    {% comment %}
+      Display variant options for a product
+
+      @param product
+      @param selected_variant
+      @param variant_selection_id
+      @param sold_out_options
+      @param style
+
+      @param enable_swatches
+      @param swatches_shape
+      @param swatches_option_trigger
+      @param swatches_option_style
+      @param swatches_product_page_size
+      @param swatches_custom_colors
+    {% endcomment %}
+
+    <variant-selection
+      {% if variant_selection_id != blank %}
+        id="{{ variant_selection_id }}"
+      {% endif %}
+      class="variant-selection"
+      product-url="{{ product.url }}.js"
+      variant="{% if selected_variant %}{{ selected_variant.id }}{% else %}not-selected{% endif %}"
+      data-variant-selection
+    >
+      {% if product.has_only_default_variant %}
+        <input
+          class="variant-selection__variants variant-selection__variants--default"
+          name="id"
+          type="hidden"
+          value="{{ product.variants.first.id }}"
+          data-variants
+        >
+      {% else %}
+        <noscript>
+          <style>
+            .variant-selection__variants {
+              display: block !important;
+            }
+          </style>
+        </noscript>
+        <select
+          class="variant-selection__variants"
+          name="id"
+          style="display: none"
+          data-variants
+        >
+          <option
+            value="not-selected"
+            disabled
+            {% if selected_variant == blank %}
+              selected
+            {% endif %}
+          >
+            {{ 'product.variants.choose_variant' | t }}
+          </option>
+          {% for variant in product.variants %}
+            <option
+              {% if selected_variant and selected_variant.id == variant.id %}
+                selected
+              {% endif %}
+              value="{{ variant.id }}"
+              {% unless variant.available %}
+                disabled
+              {% endunless %}
+            >
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+
+        {% comment %}Inject @pixelunion/shopify-variants-ui/options-selection begin{% endcomment %}
+        {% comment %}
+          Display variant options for a product
+
+          @param product
+          @param selected_variant
+          @param variant_selection_id
+          @param sold_out_options
+          @param style
+
+          @param enable_swatches
+          @param swatches_shape
+          @param swatches_option_trigger
+          @param swatches_option_style
+          @param swatches_product_page_size
+          @param swatches_custom_colors
+          @param swatch_file_type
+        {% endcomment %}
+
+        <options-selection
+          {% if variant_selection_id != blank %}
+            variant-selection="{{ variant_selection_id }}"
+          {% endif %}
+          style="display: none;"
+          {% if sold_out_options == 'disabled' %}
+            disable-unavailable
+          {% endif %}
+          {% if sold_out_options == 'hidden' %}
+            remove-unavailable
+          {% endif %}
+          data-options-selection
+        >
+          <script>
+            (function() {
+              const scriptTag = document.scripts[document.scripts.length - 1];
+              const parentTag = scriptTag.parentNode;
+
+              parentTag.style.display = '';
+            })()
+          </script>
+
+          {% for option in product.options_with_values %}
+            {% assign option_index = forloop.index0 %}
+            {% assign show_swatches = false %}
+            {% if enable_swatches %}
+              {%- assign swatches_option_trigger = swatches_option_trigger | strip | downcase -%}
+              {%- assign option_name = option.name | strip | downcase -%}
+
+              {% if option_name == swatches_option_trigger %}
+                {% assign show_swatches = true %}
+                {% assign swatch_option_key = 'option' | append: forloop.index %}
+              {% endif %}
+            {% endif %}
+
+            {% if style == 'select' and show_swatches == false %}
+              {% render 'options-select',
+                product: product,
+                selected_variant: selected_variant,
+                option: option,
+                option_index: option_index
+              %}
+            {% elsif style == 'radio' or show_swatches == true %}
+              {% render 'options-radios',
+                product: product,
+                selected_variant: product.selected_or_first_available_variant,
+                option: option,
+                option_index: option_index,
+                show_swatches: show_swatches,
+                swatch_option_key: swatch_option_key,
+                swatch_size: swatches_product_page_size,
+                swatches_option_style: swatches_option_style,
+                swatch_file_type: swatch_file_type,
+                swatches_custom_colors: swatches_custom_colors
+              %}
+            {% endif %}
+          {% endfor %}
+        </options-selection>
+        {% comment %}Inject @pixelunion/shopify-variants-ui/options-selection end{% endcomment %}
+      {% endif %}
+    </variant-selection>
+    {% comment %}Inject @pixelunion/shopify-variants-ui/variant-selection end{% endcomment %}
+
+    {% if settings.display_product_quantity %}
+      <div
+        class="product-form__quantity-box-wrapper"
+        data-product-quantity-box
+        data-selected-variant="{% if product.available or selected_variant.available %}true{% else %}false{% endif %}"
+      >
+        <label for="quantity" class="quantity-label">{{ 'products.product.quantity' | t }}</label>
+        <div class="product-form__quantity-box">
+          <button
+            aria-label="{{ 'cart.general.decrease_quantity' | t }}"
+            class="quantity--minus"
+            data-quantity-minus
+          >
+            -
+          </button>
+          <input
+            aria-live="polite"
+            id="quantity"
+            data-quantity-input
+            type="number"
+            min="1"
+            size="3"
+            maxlength="3"
+            class="quantity"
+            name="quantity"
+            value="1"
+            {% if settings.limit_quantity
+              and selected_variant.inventory_management != blank
+              and selected_variant.inventory_policy == 'deny'
+            %}
+              max="{{ selected_variant.inventory_quantity }}"
+            {% endif %}
+          >
+          <button
+            aria-label="{{ 'cart.general.increase_quantity' | t }}"
+            class="quantity--plus"
+            data-quantity-plus
+          >
+            +
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if settings.display_inventory_left
+      and product.selected_or_first_available_variant.inventory_management
+      or selected_variant.inventory_management == 'shopify'
+    %}
+      <div
+        class="product-form__inventory-remaining"
+        data-selected-variant="{% if product.available or selected_variant.available %}true{% else %}false{% endif %}"
+        data-inventory-remaining
+        data-enabled="true"
+      >
+        {% capture items_left_text %}
+          {% if product.selected_or_first_available_variant.inventory_quantity or selected_variant.inventory_quantity == 1 %}
+            {{ 'products.product.items_left_count.one' | t }}
+          {% else %}
+            {{ 'products.product.items_left_count.other' | t }}
+          {% endif %}
+        {% endcapture %}
+        <span data-inventory-remaining-count>
+          {% if selected_variant.inventory_quantity <= settings.inventory_threshold %}
+            {{ selected_variant.inventory_quantity }}
+            {{ items_left_text }}
+          {% elsif product.has_only_default_variant
+            and product.selected_or_first_available_variant.inventory_quantity <= settings.inventory_threshold
+          %}
+            {{ product.selected_or_first_available_variant.inventory_quantity }}
+            {{ items_left_text }}
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+
+    {% comment %}
+      <div id="shipping-badge">
+        <p class="availability_text">
+          Auf Lager - in 2-3 Tagen bei dir.</p>
+      </div>
+    {% endcomment %}
+    <div
+      class="product-form__cart-buttons"
+      data-atc-wrapper
+      data-selected-variant="{% if product or selected_variant %}true{% else %}false{% endif %}"
+    >
+      {% if settings.cart_action == 'reload_page' %}
+        <input
+          type="hidden"
+          name="return_to"
+          value="back"
+        >
+      {% elsif settings.cart_action == 'redirect_checkout' %}
+        <input
+          type="hidden"
+          name="return_to"
+          value="{{ checkout_url }}"
+        >
+      {% endif %}
+
+      <div class="feedback-msg">Wähle zuerst deine individuellen Maße aus</div>
+
+      {% if section.settings['extra-product'] != blank and display_checkbox %}
+        <div class="extra-product-container">
+          <!-- ... existing checkbox code ... -->
+          {% if section.settings['extra-product'] != blank %}
+            <div class="extra-product-container">
+              <div class="checkbox-wrapper-28">
+                <input
+                  id="tmp-28"
+                  type="checkbox"
+                  data-extra-product-id="{{ section.settings.extra-product.selected_or_first_available_variant.id }}"
+                  class="promoted-input-checkbox"
+                >
+
+                <svg>
+                  <use xlink:href="#checkmark-28" />
+                </svg>
+                <label for="tmp-28"> </label>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                  <symbol id="checkmark-28" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                    </path>
+                  </symbol>
+                </svg>
+              </div>
+
+              {% if shop.locale == 'de' %}
+                <p class="extra-product__text">
+                  Montagezubehör hinzufügen für nur {{ section.settings['extra-product'].price | money }}
+                </p>
+              {% elsif shop.locale == 'fr' %}
+                <p class="extra-product__text">
+                  Ajouter des accessoires de montage pour seulement
+                  {{ section.settings['extra-product'].price | money }}
+                </p>
+              {% endif %}
+
+              <div class="extra-product__popup">
+                <svg
+                  class="extra-product__popup-trigger"
+                  width="23"
+                  height="24"
+                  viewBox="0 0 23 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect y="0.5" width="23" height="23" rx="11.5" fill="#F5E5AF"/>
+                  <path d="M10.8379 9.7334H11.9995V16.5H10.8379V9.7334ZM10.8379 7.17529H11.9995V8.47021H10.8379V7.17529Z" fill="#3D3D3D"/>
+                </svg>
+                <div class="extra-product__popup__text">
+                  {% comment %} image {% endcomment %}
+                  <div class="popup__text">
+                    <img
+                      class="icon"
+                      src="{{ section.settings.extra-product.featured_image | img_url: '475x' }}"
+                      alt="Extra product information"
+                    >
+                    {% if section.settings.popup__text != blank %}
+                      {{ section.settings.popup__text }}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <button
+        type="{% if settings.cart_action == 'ajax' %} button {% else %} submit {% endif %}"
+        name="add"
+        class="
+          product__add-to-cart-button
+          add_to_cart
+          {% if show_payment_button %}product__add-to-cart-button--secondary{% endif %}
+          {{ product.available }}
+        "
+        data-label="{{ add_to_cart_label | strip }}"
+        data-product-atc
+        {% if product.available == false %}
+          disabled
+        {% endif %}
+        {% if product.selected_or_first_available_variant.title == 'Individueller Zuschnitt'
+          or product.selected_or_first_available_variant.title == 'Découpe individuelle'
+        %}
+          disabled
+        {% endif %}
+      >
+        <span class="text" data-product-atc-text>
+          {% if product.selected_or_first_available_variant.title == 'Individueller Zuschnitt'
+            or product.selected_or_first_available_variant.title == 'Découpe individuelle'
+          %}
+            {% if shop.locale == 'de' %}
+              Gib deine Maße ein
+            {% elsif shop.locale == 'fr' %}
+              Entrez vos mesures
+            {% endif %}
+          {%- else -%}
+            {{ add_to_cart_label }}
+          {% endif %}
+        </span>
+        <div class="loading-icon">
+          <div class="loading-icon__animation"></div>
+        </div>
+      </button>
+
+      {% if show_payment_button %}
+        {{ form | payment_button }}
+      {% endif %}
+      <div data-payment-terms-reference style="display: none;">
+        {{ form | payment_terms }}
+      </div>
+
+      <div class="cart-benefit">
+        <img
+          alt="Delivered to your doorstep in no time. icon"
+          class="icon"
+          src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/delivery-fast.svg?v=1699271892"
+        >
+
+        {% if shop.locale == 'de' %}
+          <span>In 2-3 Werktagen bei dir.</span>
+        {% elsif shop.locale == 'fr' %}
+          <span>Chez toi dans 2-3 jours ouvrables </span>
+        {% endif %}
+        <img
+          class="icon"
+          src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/2560px-Klarna_Payment_Badge_2.png?v=1662719318"
+          alt="Delivered to your doorstep in no time. icon"
+        >
+
+        {% if shop.locale == 'de' %}
+          <span>Kauf auf Rechnung & bezahle nach 30 Tagen.</span>
+        {% elsif shop.locale == 'fr' %}
+          <span>Acheter sur facture & payer après 30 jours.</span>
+        {% endif %}
+
+        <img
+          class="icon"
+          src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/loss_8.png?v=1662719319"
+          alt="Delivered to your doorstep in no time. icon"
+        >
+
+        {% if shop.locale == 'de' %}
+          <span>10 Jahre Garantie & Made in Germany.</span>
+        {% elsif shop.locale == 'fr' %}
+          <span>10 ans de garantie & Livraison rapide.</span>
+        {% endif %}
+      </div>
+
+      {% if product.has_only_default_variant == false and hasCustomZuschneiden == true %}
+        <div class="zuschneiden-container">
+          <div class="zuschneiden-image__wrapper">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/icons8-cut-64_1.png?v=1672140718"
+              alt="zuschneiden image wallando"
+            >
+          </div>
+          <div class="zuschneiden-text__wrapper">
+            {% if shop.locale == 'de' %}
+              <button class="zusschneiden-titel" onclick="event.preventDefault(); openModal(event, true);">
+                Hier klicken um individuelle Maße anzugeben
+              </button>
+            {% elsif shop.locale == 'fr' %}
+              <button class="zusschneiden-titel" onclick="event.preventDefault(); openModal(event, true);">
+                Cliquez ici pour indiquer les dimensions individuelles
+              </button>
+            {% endif %}
+
+            {% if shop.locale == 'de' %}
+              <p class="zuschneiden-subtitle">
+                Kostenlos und perfekt nach deinen Maßen und Vorgaben, auf den Millimeter genau zugeschnitten
+              </p>
+            {% elsif shop.locale == 'fr' %}
+              <p class="zuschneiden-subtitle">
+                Gratuit et parfaitement découpé selon tes mesures et tes spécifications, au millimètre près.
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if shop.locale == 'de' %}
+        <div class="shipping-benefit">
+          <span>
+            <strong> Kosten- und nervenfreier Versand: </strong>
+            <br>
+            Die Wandverkleidungen werden in gerolltem Zustand verschickt und nehmen nach dem Auspacken ihre
+            Ursprungsform wieder an.
+          </span>
+        </div>
+      {% elsif shop.locale == 'fr' %}
+        <div class="shipping-benefit">
+          <span>
+            <strong> Envoi sans frais ni tracas: </strong>
+            <br>
+            Les revêtements muraux sont envoyés à l'état roulé et reprennent leur forme initiale après déballage. Ils
+            reprennent leur forme initiale.
+          </span>
+        </div>
+      {% endif %}
+
+      {% comment %}
+        <div class="custom-line-item-field">
+        <p class="headline-item-field"> Brauchst du inviduelle Maße? </p>
+        <p class="line-item-property__field">
+        <p>Trage hier genaue Maße ein, damit wir deine Wandverkleidung perfekt für dich zuschneiden können:</p>
+        <label for="Höhe ">Höhe (in cm)</label>
+        <p class="size-values" style="margin-bottom: 10px;">Maximal <span class="hohe-value"></span>cm möglich</p>
+        <input id="Höhe" type="text" name="properties[Höhe]">
+        <label for="Breite">Breite (in cm)</label><p class="size-values" style="margin-bottom: 10px;">Maximal <span class="breite-value"></span>cm möglich</p>
+        <input id="Breite" type="text" name="properties[Breite]">
+
+        <p>Bitte beachte, dass die Preise bei jeglicher Größe gleich bleiben und die angegeben Maße erst im Checkout ersichtlich sind!</p>
+
+        </p>
+        </div>
+      {% endcomment %}
+
+      <div
+        class="surface-pick-up {% unless product.available %}surface-pick-up--hidden{% endunless %}"
+        data-surface-pick-up
+      ></div>
+    </div>
+
+    {% assign onlyCustomVariantCreatedByApp = true %}
+    {% for variant in product.variants %}
+      {% unless variant.title contains 'Default' %}
+        {% assign onlyCustomVariantCreatedByApp = false %}
+      {% endunless %}
+    {% endfor %}
+
+    {% if product.has_only_default_variant == false and onlyCustomVariantCreatedByApp == false %}
+      <div class="modal-pdp">
+        <div class="modal-content">
+          <span class="close-button">x</span>
+          <p>
+            <strong>Brauchst du individuelle Maße?</strong>
+          </p>
+
+          <p>Trage hier genaue Maße ein, damit wir deine Wandverkleidung perfekt für dich zuschneiden können:</p>
+
+          <div class="line-item-property__field">
+            <label for="Höhe">Höhe(in cm) - Maximal {{ customZuschneidenMax }} cm möglich </label>
+            <p
+              style="color:red"
+              class="warning-message-one hidden"
+              hidden
+            >
+              Maximal {{ customZuschneidenMax }} cm möglich
+            </p>
+
+            <input
+              id="Höhe"
+              inputmode="decimal"
+              onkeydown="return event.keyCode == 69 ? false : true"
+              type="number"
+              name="properties[Höhe]"
+              min="1"
+              max="{{customZuschneidenMax}}"
+            >
+          </div>
+
+          <div class="line-item-property__field">
+            <label for="Breite">Breite(in cm) - Maximal 100 cm möglich</label>
+            <p
+              style="color:red"
+              class="warning-message-two hidden"
+              hidden
+            >
+              Maximal 100 cm möglich
+            </p>
+            <input
+              id="Breite"
+              inputmode="decimal"
+              type="number"
+              onkeydown="return event.keyCode == 69 ? false : true"
+              name="properties[Breite]"
+              min="1"
+              max="100"
+            >
+          </div>
+
+          <input
+            class="
+              close-trigger modal-save-button product__add-to-cart-button
+              add_to_cart
+            "
+            type="submit"
+            value="Maße Anwenden"
+          >
+
+          <div class="custom-accordion" style="margin-top: 1.5rem !important">
+            <div class="custom-accordion__header">
+              <p class="p-product">FAQ zu deinem Zuschnitt</p>
+            </div>
+
+            <div class="custom-accordion__body">
+              <div class="custom-accordion__inner">
+                <div class="faq-wrapper-pop-up">
+                  <p style="margin-bottom: 10px; font-size: inherit;">
+                    <strong>Kosten die Maße unterschiedlich viel?</strong>
+                  </p>
+                  <span
+                    >Nein! Egal, ob du die maximalen oder minimalen Maße nutzt, der Preis bleibt immer der gleiche. Sie
+                    werden auf den Millimeter genau zugeschnitten.</span
+                  >
+
+                  <p style="margin-bottom: 10px; margin-top:25px; font-size: inherit;">
+                    <strong>Womit bringe ich die Platten an und wie verdichte ich sie?</strong>
+                  </p>
+                  <span>Ganz einfach, alles mit handelsüblichem Silikon.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endform %}
+
+  <div class="custom-popup" id="custom-popup">
+    <div class="custom-popup_wrapper">
+      <h3 class="custom-popup_title">Deine individuellen Maße werden erstellt...</h3>
+      <div class="custom-popup_content">
+        <p>
+          Es kann unter bestimmten Umständen dazu kommen, dass die Ladezeit etwas länger ist. Keine Sorge, es wird
+          legiglich deine für dich invidivuelle Variante des Produkts erstellt.
+        </p>
+        <p>
+          Wenn du Fragen hast, oder nicht weiterkommst nach 30 Sekunden, dann schreib uns:
+          <a href="#">support@wallando.de</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  var select = document.querySelector(".options-selection__input-select");
+  var radioBtns = document.querySelectorAll(".options-selection__option-value-name");
+  const heightLineItem = document.getElementById("Höhe");
+  const widthLineItem = document.getElementById("Breite");
+  const AtcBtn = document.querySelector(".product__add-to-cart-button");
+
+  const customVariantValue = "Individueller Zuschnitt"
+
+  var currentUrl = window.location.href;
+
+  // Check if the current URL contains 'fr'
+  if (currentUrl.indexOf('fr') !== -1) {
+    var localeIsFR = true;
+  } 
+
+  if(radioBtns.length > 0 && typeof radioBtns !== "undefined"){
+    radioBtns.forEach((radio)=> {
+      radio.addEventListener("click", function(event){
+        if(radio.innerText === customVariantValue || radio.innerText === "Découpe individuelle"){
+          
+          openModal(event, false);
+
+// disable atc and change it´s text
+      AtcBtn.disabled = true;
+      if(!localeIsFR) {
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Gib deine Maße ein</span>`
+      } else {
+        AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Entrez vos mesures</span>`
+      }
+        } else {
+          document.querySelector(".custom-line-items-wrapper").classList.remove("active");
+
+// if the selector is changed, set the line items to empty
+      heightLineItem.value = "";
+      widthLineItem.value = "";
+
+// enable atc and change it´s text
+      AtcBtn.disabled = false;
+      if(!localeIsFR) {
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+      } else {
+        AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
+      }
+        }
+      });
+    })
+  } 
+
+  select && select.addEventListener('change', function(event) {
+    if (select.value !== customVariantValue) { // remove the custom line-items styles here
+      document.querySelector(".custom-line-items-wrapper").classList.remove("active");
+
+// if the selector is changed, set the line items to empty
+      heightLineItem.value = "";
+      widthLineItem.value = "";
+
+// enable atc and change it´s text
+      AtcBtn.disabled = false;
+      if(!localeIsFR) {
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+      } else {
+        AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
+      }
+    } else if (select.value === customVariantValue || select.value === "Découpe individuelle") {
+      openModal(event, false);
+
+// disable atc and change it´s text
+      AtcBtn.disabled = true;
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Gib deine Maße ein</span>`
+    }
+  });
+
+/* modals */
+
+  function openModal(event, fireEvent) {
+
+    const modal = document.querySelector(".modal-pdp");
+    modal.classList.add("show-modal");
+
+    let selectedHeight = 0;
+    let selectedwidth = 0;
+
+// when the modal is opened, set the select to custom
+
+    select ? select.value = customVariantValue: null;
+
+    // when the modal is opened, set the select to custom
+
+    if(radioBtns){
+      radioBtns.forEach((node) => {
+      if(node.innerText === customVariantValue){
+        node.dispatchEvent(new Event('change'));
+      }
+    })
+    }
+
+    fireEvent && select ? select.dispatchEvent(new Event('change')) : null;
+
+    heightLineItem.addEventListener("change", function() {
+      selectedHeight = parseFloat(this.value).toFixed(2);
+      
+      const warningMessageOne = document.querySelector(".warning-message-one")
+      if (selectedHeight < 1) 
+        this.value = 1;
+      
+      if (selectedHeight > {{ customZuschneidenMax }}) {
+
+        warningMessageOne.classList.remove("hidden");
+        warningMessageOne.style.display = "block";
+        this.value = {{ customZuschneidenMax }};
+        return selectedHeight = {{ customZuschneidenMax }};
+      } else {
+        warningMessageOne.classList.add("hidden");
+        warningMessageOne.style.display = "none";
+      }
+    });
+
+    widthLineItem.addEventListener("change", function() {
+      selectedwidth = parseFloat(this.value).toFixed(2);
+
+      const warningMessageTwo = document.querySelector(".warning-message-two")
+      if (selectedwidth < 1) 
+        this.value = 1;
+      
+
+
+
+      if (selectedwidth > 100) {
+
+        warningMessageTwo.classList.remove("hidden");
+        warningMessageTwo.style.display = "block";
+        this.value = 100;
+        return selectedwidth = 100;
+      } else {
+        warningMessageTwo.classList.add("hidden");
+        warningMessageTwo.style.display = "none";
+      }
+    });
+
+    document
+      .querySelectorAll(".close-trigger")
+      .forEach((trigger, e) => {
+        trigger.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          if (selectedHeight <= {{ customZuschneidenMax }} || selectedwidth <= 100) {
+            modal.classList.remove("show-modal");
+            if (selectedHeight >= 1 && selectedwidth >= 1) {
+              document.querySelector(".custom-line-items-wrapper").classList.add("active");
+              AtcBtn.disabled = false;
+              if(!localeIsFR) {
+              AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+              } else {
+                AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
+              }
+
+            }
+          }
+
+  // add the custom line-items styles here
+          selectedwidth >= 1
+            ? document.querySelector(".width-dom").innerHTML = `${selectedwidth}`
+            : null;
+          selectedHeight >= 1
+            ? document.querySelector(".height-dom").innerHTML = `${selectedHeight}`
+            : null;
+        });
+      })
+
+      document
+      .querySelector(".close-button")
+      .addEventListener("click", () => {
+        modal.classList.remove("show-modal");
+        heightLineItem.value = "";
+        widthLineItem.value = "";
+        document.querySelector(".custom-line-items-wrapper").classList.remove("active");
+      })
+     
+
+  }
+
+// Change sticky ATC language
+
+if(localeIsFR) {
+
+window.addEventListener('scroll', function() {
+    // Target the button element with the specified class
+    const button = document.querySelector('.zrx-sticky-atc-main-button');
+
+    // Check if the button exists
+    if (button) {
+        // Access the span element within the button and change its text
+        const span = button.querySelector('span');
+        if (span) {
+            span.textContent = 'Ajouter au panier';
+        } else {
+            console.log("Span element not found within the button.");
+        }
+    } else {
+        console.log("Button element with class 'zrx-sticky-atc-main-button' not found.");
+    }
+});
+
+}
+</script>

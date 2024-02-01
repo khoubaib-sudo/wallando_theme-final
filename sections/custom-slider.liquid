@@ -1,0 +1,238 @@
+{% liquid
+  assign image = section.settings.image
+  assign image_two = section.settings.image_two
+%}
+
+{% if shop.locale == 'de' %}
+  <h2 class="center-title">Vor & nach deiner Wandverkleidung</h2>
+{% elsif shop.locale == 'fr' %}
+  <h2 class="center-title">Avant & après le revêtement mural de votre cuisine</h2>
+{% endif %}
+
+<div class="slider-container">
+  <div id="before-after-slider">
+    <div id="before-image">
+      {% render 'rimg', img: image, alt: alt, size: '1500x', lazy: false, crop: crop, class: '' %}
+    </div>
+    <div id="after-image">
+      {% render 'rimg', img: image_two, alt: alt, size: '1500x', lazy: false, crop: crop, class: '' %}
+    </div>
+    <div id="resizer"></div>
+  </div>
+</div>
+
+<style>
+  .slider-container img {
+    width:100%;
+    display:block;
+    max-width: none;
+    max-height: 500px;
+      object-fit: cover;
+      object-position: center;
+  }
+
+  .slider-container {
+    	display:block;
+    	margin:30px auto;
+      max-height: 500px;
+      max-width: 1200px;
+      width: 95%;
+      position: relative;
+      overflow: hidden;
+  }
+
+  #before-after-slider {
+    width:100%;
+    height: 100%;
+    max-height: 100%;
+    position:relative;
+    overflow:hidden;
+    border-radius: 40px;
+  }
+
+  @media (max-width:850px) {
+    #before-after-slider {
+
+    border-radius: 20px;
+  }
+    }
+
+  #after-image {
+    display:block
+  }
+
+  #before-image {
+    position:absolute;
+    height:100%;
+    width:50%;
+    top:0;
+    left:0;
+    overflow:hidden;
+    z-index:2;
+  }
+
+    #before-image img {
+      height: 100%;
+
+    }
+
+  #resizer {
+    position:absolute;
+    display:flex;
+    align-items:center;
+    z-index:5;
+    top:0;
+    left:50%;
+    height:100%;
+    width:4px;
+    background:white;
+    /*Stop vertical scrolling on touch*/
+    -ms-touch-action: pan-y;
+      touch-action: pan-y;
+  }
+
+  #resizer:after {
+    background: #f5e5af;
+    content:'\21CC';
+    font-weight:900;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:black;
+    position:absolute;
+    margin: 0 0 0 -19px;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+
+  }
+
+  @media (max-width:767px) {
+    .slider-container {
+      width:100%;
+      padding:0 20px
+    }
+  }
+</style>
+
+<script>
+  const slider = document.getElementById('before-after-slider');
+  const before = document.getElementById('before-image');
+  const beforeImage = before.getElementsByTagName('img')[0];
+  const resizer = document.getElementById('resizer');
+
+  let active = false;
+
+  //Sort overflow out for Overlay Image
+  document.addEventListener("DOMContentLoaded", function() {
+    let width = slider.offsetWidth;
+
+    beforeImage.style.width = width + 'px';
+  });
+
+  //Adjust width of image on resize
+  window.addEventListener('resize', function() {
+    let width = slider.offsetWidth;
+
+    beforeImage.style.width = width + 'px';
+  })
+
+  resizer.addEventListener('mousedown',function(){
+    active = true;
+   resizer.classList.add('resize');
+
+  });
+
+  document.body.addEventListener('mouseup',function(){
+    active = false;
+   resizer.classList.remove('resize');
+  });
+
+  document.body.addEventListener('mouseleave', function() {
+    active = false;
+    resizer.classList.remove('resize');
+  });
+
+  document.body.addEventListener('mousemove',function(e){
+    if (!active) return;
+    let x = e.pageX;
+    x -= slider.getBoundingClientRect().left;
+    slideIt(x);
+    pauseEvent(e);
+  });
+
+  resizer.addEventListener('touchstart',function(){
+    active = true;
+    resizer.classList.add('resize');
+  });
+
+  document.body.addEventListener('touchend',function(){
+    active = false;
+    resizer.classList.remove('resize');
+  });
+
+  document.body.addEventListener('touchcancel',function(){
+    active = false;
+    resizer.classList.remove('resize');
+  });
+
+  //calculation for dragging on touch devices
+  document.body.addEventListener('touchmove',function(e){
+    if (!active) return;
+    let x;
+
+    let i;
+    for (i=0; i < e.changedTouches.length; i++) {
+    x = e.changedTouches[i].pageX;
+    }
+
+    x -= slider.getBoundingClientRect().left;
+    slideIt(x);
+    pauseEvent(e);
+  });
+
+  function slideIt(x){
+      let transform = Math.max(0,(Math.min(x,slider.offsetWidth)));
+      before.style.width = transform+"px";
+      resizer.style.left = transform-0+"px";
+  }
+
+  //stop divs being selected.
+  function pauseEvent(e){
+      if(e.stopPropagation) e.stopPropagation();
+      if(e.preventDefault) e.preventDefault();
+      e.cancelBubble=true;
+      e.returnValue=false;
+      return false;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Custom Slider",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Before"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_two",
+      "label": "Image After"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Slider",
+      "category": "custom",
+      "settings": {}
+    }
+  ],
+  "templates": [
+    "index",
+    "product",
+    "page"
+  ]
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+{% liquid
+    assign image = section.settings.image  
+  %}
+
+  <div class="max-container align-center">
+    
+
+    {% if section.settings.custom_header != blank %}
+    <div class="">
+        <h1 class="center-title">
+            {{section.settings.custom_header}}
+        </h1>
+    </div>
+{% endif %}
+
+{%- if image != blank -%}
+{% assign alt = image.alt %}
+{% assign crop = crop | default: 'center' %}
+
+  {%
+    render 'rimg'
+    img: image,
+    alt: alt,
+    size: '1500x',
+    lazy: false,
+    crop: crop
+  %}
+
+{%- endif -%}
+
+  </div>
+
+  {% schema %}
+  {
+    "name": "Product Expert",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image Logo"
+      },
+    {
+      "type": "text",
+      "id": "custom_header",
+      "label": "Header"
+    }
+    ],
+    "presets": [
+      {
+        "name": "Product Expert",
+        "category": "custom",
+        "settings": {}
+      }
+    ],
+    "templates": [
+      "index",
+      "product",
+      "collection",
+      "page"
+    ]
+  }
+  
+  {% endschema %}

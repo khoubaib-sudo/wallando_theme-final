@@ -1,0 +1,45 @@
+<div class="predictive-search__overlay" data-search-overlay>
+  <div class="predictive-search" data-search>
+    <div class="predictive-search__wrapper" data-search-wrapper>
+
+      <div class="predictive-search__bar">
+        <form class="predictive-search__form" action="{{ routes.search_url }}" data-search-form>
+          <input data-predictive-search-type type="hidden" name="type" value="{{ settings.search_option }}" />
+          <input data-predictive-search-terms class="predictive-search__input" type="text" name="q" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms }}" x-webkit-speech autocapitalize="off" autocomplete="off" autocorrect="off" />
+          <button class="predictive-search__submit">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M18 10C18 13.866 14.866 17 11 17C7.13401 17 4 13.866 4 10C4 6.13401 7.13401 3 11 3C14.866 3 18 6.13401 18 10ZM15.7389 16.446C14.4125 17.4228 12.7736 18 11 18C6.58172 18 3 14.4183 3 10C3 5.58172 6.58172 2 11 2C15.4183 2 19 5.58172 19 10C19 12.2836 18.0432 14.3438 16.5085 15.8014L21.3536 20.6464C21.5488 20.8417 21.5488 21.1583 21.3536 21.3536C21.1583 21.5488 20.8417 21.5488 20.6464 21.3536L15.7389 16.446Z" fill="currentColor"/>
+            </svg>
+          </button>
+          <button aria-label="{{ 'layout.general.close_window' | t }}" class="predictive-search__close" data-close-search>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 13L13 1M13 13L1 1" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="predictive-search__message" data-predictive-search-message></div>
+
+      <div class="predictive-search__results {% if settings.search_option == 'product,page,article' %}predictive-search__results--everything{% endif %}" data-results-wrapper>
+        <div class="search-results__products-title">
+          <p class="font-weight--bold">{{ 'general.search.products_label' | t }}</p>
+          <a data-product-search-link href="#">{{ 'general.search.view_all' | t }}</a>
+        </div>
+        {% if settings.search_option == 'product,page,article' %}
+          <div class="search-results__side-title">
+            <p class="font-weight--bold">{{ 'general.search.articles_label' | t }}</p>
+            <a data-side-search-link href="#">{{ 'general.search.view_all' | t }}</a>
+          </div>
+        {% endif %}
+        <div class="search-results__products" data-product-search-results>
+        </div>
+        {% if settings.search_option == 'product,page,article' %}
+          <div class="search-results__side" >
+            <ul data-side-search-results></ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

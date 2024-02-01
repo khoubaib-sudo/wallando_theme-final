@@ -1,0 +1,118 @@
+{% liquid
+  assign base_name = base_name | default: 'image-with-text'
+%}
+
+<div id="inhaltsverzeichnis" class="inhalt-blog-margin__wrapper">
+  <div class="max-container image-with-text__container inhalt-blog-container">
+
+    {%- if section.settings.heading != blank -%}
+    <h1 class="{{ base_name }}__heading">{{ section.settings.heading | escape }}</h1>
+    {%- endif -%}
+  
+    <ul class="inhalt-point-container">
+      {% for block in section.blocks %}
+
+        {% assign heading_tag = block.settings.heading_tag | default: 'h3' %}
+
+      {% if block.settings.inhalt != blank %}
+   
+      {%- if block.settings.link != blank -%}
+        <{{ heading_tag }}>
+          <a href="#{{ block.settings.link }}" class="inhaltblogitem">{{ block.settings.inhalt }}</a>
+        </{{ heading_tag }}>
+    
+      {%- endif -%}
+      {% endif %}
+
+      {% if block.settings.inhalt_two != blank %}
+        {%- if block.settings.link_two != blank -%}
+          <{{ heading_tag }} class="inhalt_two-container">
+            <a href="#{{ block.settings.link_two }}">{{ block.settings.inhalt_two }}</a>
+          </{{ heading_tag }}>
+       
+        {%- endif -%}
+      {%- endif -%}
+
+      {% if block.settings.inhalt_three != blank %}
+        {%- if block.settings.link_three != blank -%}
+          <{{ heading_tag }} class="inhalt_three-container">
+            <a href="#{{ block.settings.link_three }}">{{ block.settings.inhalt_three }}</a>
+          </{{ heading_tag }}>
+ 
+        {%- endif -%}
+      {%- endif -%}
+
+      {% endfor %}
+    </ul>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Inhalt Blog",
+  "class": "shopify-section--image-with-text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Image with text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "inhalt",
+          "label": "Inhalt Item",
+          "default": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "text",
+          "id": "inhalt_two",
+          "label": "Inhalt Item Two"
+        },
+        {
+          "type": "text",
+          "id": "link_two",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "text",
+          "id": "inhalt_three",
+          "label": "Inhalt Item Three"
+        },
+        {
+          "type": "text",
+          "id": "link_three",
+          "label": "Link to Sections"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading Tag",
+          "options": [
+            {"value": "h2", "label": "h2"},
+            {"value": "h3", "label": "h3"}
+          ],
+          "default": "h3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inhalt Blog"
+    }
+  ]
+}
+{% endschema %}

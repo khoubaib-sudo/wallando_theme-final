@@ -1,0 +1,380 @@
+{% liquid
+  assign toggle = section.settings.toggle
+  assign filter_block = nil
+  assign active_filters_count = 0
+  assign has_sidebar = false
+  assign has_configured_filters = false
+  assign show_product_count = false
+
+  for block in section.blocks
+    if block.type == 'filter'
+      assign filter_block = block
+      assign show_product_count = filter_block.settings.show_filter_product_count
+
+      for filter in collection.filters
+        assign has_sidebar = true
+        assign has_configured_filters = true
+
+        if filter.type == 'list'
+          assign active_filters_count = active_filters_count | plus: filter.active_values.size
+        elsif filter.type == 'price_range' and filter.min_value.value or filter.max_value.value
+          assign active_filters_count = active_filters_count | plus: 1
+        endif
+      endfor
+
+    else
+      assign has_sidebar = true
+    endif
+  endfor
+%}
+<script
+  type="application/json"
+  data-section-type="collection-page"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "show_secondary_media": {{ settings.collection_secondary_image | json }}
+  }
+</script>
+
+<section
+  class="
+    collection-page
+    {% if filter_block %}collection-page--with-tag-filters{% endif %}
+    {% if section.settings.collection_sort %}collection-page--with-sorting{% endif %}
+  "
+  data-section-id="{{ section.id }}"
+>
+
+  {% paginate collection.products by section.settings.pagination_limit %}
+  {% if has_sidebar %}
+    <div class="section-with-sidebar__wrapper">
+      <aside
+        class="
+          sidebar
+          collection-page__sidebar
+          {% if section.settings.sidebar_mobile_position == 'below' %}collection-page__sidebar--hide-mobile{% endif %}
+        "
+        data-sidebar
+        data-sidebar-top
+        aria-label="{{ 'general.accessibility.sidebar' | t }}"
+        data-has-toggle="{{ toggle }}"
+        style="--filter-bar-height: 1rem;"
+      >
+        {%
+          render 'sidebar-content',
+          toggle: toggle,
+          filter_group_classes: 'sidebar__block-faceted-search',
+          show_product_count: show_product_count,
+          has_configured_filters: has_configured_filters
+        %}
+      </aside>
+  {% endif %}
+
+  {% if filter_block %}
+    {%
+      render 'navigation-mobile-filters',
+      toggle: toggle,
+      active_filters_count: active_filters_count,
+      show_product_count: show_product_count,
+    %}
+  {% endif %}
+
+  <div class="collection-page__content">
+
+    {% if shop.locale == 'de' %}
+     <div class="custom-benefits__columns ">
+      
+      
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/loss_7.png?v=1662995074" alt="Delivered to your doorstep in no time. icon">
+              10.000+ Kunden
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Viele glückliche Kunden schwören auf unser Produkt!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/loss_17.png?v=1662995073" alt="Delivered to your doorstep in no time. icon">
+              Made in Germany
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Unsere Wandverkleidung wird  in Deutschland gefertigt
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/loss_8_1.png?v=1662995074" alt="Delivered to your doorstep in no time. icon">
+              10 Jahre Garantie
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Da wir von unseren Produkten absolut überzeugt sind
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+{% elsif shop.locale == 'fr' %}
+     <div class="custom-benefits__columns ">
+      
+      
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://www.wallando.de/cdn/shop/files/rating_1_512x512.png" alt="Delivered to your doorstep in no time. icon">
+              Plus de 10.000 clients
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Des clients satisfaits ne jurent que par notre produit !
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://www.wallando.de/cdn/shop/files/Ok_120x120.png" alt="Delivered to your doorstep in no time. icon">
+              Livraison dans les plus brefs délais
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Votre paroi de fond de douche sera envoyée dans les 24 heures suivant votre commande.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-benefits__item">
+        <div class="custom-benefits__item-inner">
+          <div class="custom-benefits__item-text-container">
+            <h4 class="h3 custom-benefits__heading" style="--text-max-width: 42rem;">
+              <img src="https://www.wallando.de/cdn/shop/files/guarantee-certificate_1_512x512.png" alt="Delivered to your doorstep in no time. icon">
+              10 ans de garantie
+            </h4>
+            <div class="custom-benefits__item-subheading p-med" style="--text-max-width: 42rem;">
+              Convaincus de nos produits, nous vous offrons une garantie de 10 ans
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+{% endif %}
+
+    <div id="collectionBegin"></div> 
+   {% comment %}
+  Check if the main menu is not empty
+{% endcomment %}
+
+
+  {% comment %}
+  Loop through all blocks in the section
+{% endcomment %}
+
+{% comment %}
+  Check if there is at least one link block in the section
+{% endcomment %}
+{% assign has_link_block = false %}
+{% for block in section.blocks %}
+  {% if block.type == 'link' %}
+    {% assign has_link_block = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% comment %}
+  Output the text if there is at least one link block
+{% endcomment %}
+
+{% if has_link_block %}
+<div class="link-wrapper">
+
+  {% if shop.locale == 'de' %}
+    <p>Wird oft gesucht</p>
+{% elsif shop.locale == 'fr' %}
+  <p>Souvent recherché</p>
+{% endif %}
+
+{% for block in section.blocks %}
+  {% comment %}
+    Check if the block has a type of 'link'
+  {% endcomment %}
+  
+  {% if block.type == 'link' %}
+
+    <a href="{{ block.settings.link_link }}" class="link-container  {% if block.settings.link_link == collection.url %}
+      active
+    {% endif %}">
+      {% if block.settings.logo %}
+        <img class="link-container-image" src="{{ block.settings.logo | img_url: 'master' }}" alt="{{ block.settings.link_text }}">
+      {% endif %}
+      {% if block.settings.link_text %}
+        <span class="link-container-text">{{ block.settings.link_text }}</span>
+      {% endif %}
+    </a>
+  {% endif %}
+{% endfor %}
+</div>
+{% endif %}
+
+    
+    {%- assign products = collection.products -%}
+    {%- assign products_per_row = section.settings.products_per_row -%}
+
+    
+
+    {% if collection.handle != blank and filter_block or section.settings.collection_sort %}
+      <div class="collection-page__filters" data-collection-filters>
+        {% if has_configured_filters and collection.handle != 'vendors' %}
+          <button class="collection-page__tag-filter" data-mobile-filters-button>
+            {{ 'collections.sorting.title_count' | t: count: active_filters_count }}
+          </button>
+        {% endif %}
+
+        {% if active_filters_count > 0 and collection.products.size > 0 %}
+          <div class="collection-page__filters--active">
+            {%
+              render 'active-filters',
+              active_filters_count: active_filters_count,
+              filters: collection.filters,
+              clear_url: collection.url
+            %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.collection_sort %}
+          {% for option in collection.sort_options %}
+            {% if option.value == collection.default_sort_by %}
+              {% assign default_option = option.name %}
+            {% endif %}
+            {% if option.value == collection.sort_by %}
+              {% assign selected_option = option.name %}
+            {% endif %}
+          {% endfor %}
+          {% if selected_option == blank %}
+            {% assign selected_option = default_option %}
+          {% endif %}
+
+          <div class="collection-page__sort-filter">
+            <div class="disclosure sort-filter" data-sort-by-disclosure>
+              <button
+                type="button"
+                class="disclosure__toggle sort-filter__toggle"
+                aria-expanded="false"
+                aria-controls="sort-list"
+                data-disclosure-toggle
+              >
+                {{ 'collections.sorting.title' | t }}: <span class="sort-filter__toggle-selected-text">{{ selected_option }}</span>
+              </button>
+              <ul
+                id="sort-list"
+                class="
+                  disclosure-list
+                  sort-filter__list
+                "
+                data-disclosure-list
+              >
+                {% for option in collection.sort_options %}
+                  <li>
+                    <a
+                      class="disclosure-list__item {% if option.value == collection.sort_by %}disclosure-list__item--current{% endif %}"
+                      href="#"
+                      aria-current="{% if option.value == collection.sort_by %}true{% else %}false{% endif %}"
+                      data-sort-by-value
+                      data-value="{{ option.value }}"
+                    >
+                      <span class="disclosure-list__option">{{ option.name }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if collection.products.size == 0 %}
+      <div class="collection-page__empty">
+        {% if active_filters_count > 0 %}
+          <div class="collection-page__filters--active">
+            {%
+              render 'active-filters',
+              active_filters_count: active_filters_count,
+              filters: collection.filters,
+              clear_url: collection.url
+            %}
+          </div>
+        {% endif %}
+        <p>{{ 'collections.general.no_matches' | t }}</p>
+      </div>
+    {% else %}
+
+      <div
+        class="
+          collection-page__list
+          collection-page__list--{{ section.settings.products_per_row }}-column
+          collection-page__list--{{ settings.mobile_products_per_row }}-column-mobile
+        "
+      >
+        {% for product in products %}
+          {%
+            render 'product-thumbnail',
+            product: product
+          %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {%
+      render 'pagination',
+      paginate: paginate
+    %}
+  </div>
+
+  {% if has_sidebar %}
+    </div>
+  {% endif %}
+  {% endpaginate %}
+
+  {% if section.settings.sidebar_mobile_position == 'below' and has_sidebar %}
+    <aside
+      class="
+        sidebar
+        collection-page__bottom-sidebar
+      "
+      data-sidebar
+      data-sidebar-bottom
+      aria-label="{{ 'general.accessibility.sidebar' | t }}"
+      data-has-toggle="{{ toggle }}"
+    >
+      {%
+        render 'sidebar-content',
+        filter_group_classes: 'sidebar__block-faceted-search--hidden',
+        toggle: toggle,
+        show_product_count: show_product_count,
+        has_configured_filters: has_configured_filters
+      %}
+    </aside>
+  {% endif %}
+</section>

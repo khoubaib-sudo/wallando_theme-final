@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="robots" content="index,follow">
+    
+    
+    {% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %}{% endif %}
+    <title>{% if template contains "index" %}{{ page_title }}{% else %}{{ page_title }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}{% endif %}{% unless page_title contains shop.name %} - {{ shop.name }}{% endunless %}{% endif %}</title>
+    
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags | escape }}.{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}.{% endif %}"/>
+    {% endif %}
+
+    {% render 'social-meta-info' %}
+
+    {% if collection.previous_product %}
+      <link rel="prev" href="{{ collection.previous_product }}">
+    {% endif %}
+    {% if collection.next_product %}
+      <link rel="next" href="{{ collection.next_product }}">
+    {% endif %}
+
+    <!-- Mobile Specific Metas -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.shop_bg_color }}">
+
+    <!-- Preconnect Domains -->
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+
+    <!-- Preload Assets -->
+    <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+    <link rel="preload" href="{{ 'custom.css' | asset_url }}" as="style">
+    <link rel="preload" href="{{ 'retina.js' | asset_url }}" as="script">
+
+    <!-- Stylesheets for Retina-->
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.css' | asset_url | stylesheet_tag }}
+
+      <!--json gtag-->
+
+    {% if template contains 'product' %}
+        {% render 'json-ld-product' %}
+    {% endif %}
+
+       <!--end json gtag-->
+
+    {% if settings.favicon != nil %}
+      <link rel="shortcut icon" type="image/x-icon" href="{{ settings.favicon | img_url: '180x180' }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | img_url: '180x180' }}"/>
+      <link rel="apple-touch-icon" sizes="72x72" href="{{ settings.favicon | img_url: '72x72' }}"/>
+      <link rel="apple-touch-icon" sizes="114x114" href="{{ settings.favicon | img_url: '114x114' }}"/>
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.favicon | img_url: '180x180' }}"/>
+      <link rel="apple-touch-icon" sizes="228x228" href="{{ settings.favicon | img_url: '228x228' }}"/>
+    {% else %}
+      <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.png' | asset_url }}">
+    {% endif %}
+
+    <link rel="canonical" href="{{ canonical_url }}"/>
+
+    {% if template contains 'customer' %}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
+    {% endif %}
+
+  
+
+    {% if settings.show_shipping_calculator %}
+      <script src="{{ '/services/javascripts/countries.js' }}" defer></script>
+    {% endif %}
+
+    {% comment %}Inject theme-object begin{% endcomment %}
+    <script>
+      window.Theme = window.Theme || {};
+      window.Theme.version = '6.0.0';
+      window.Theme.name = 'Retina';
+    </script>
+    {% comment %}Inject theme-object end{% endcomment %}
+
+
+    <script>
+      {% render 'js-variables' %}
+    </script>
+
+    <script src="{{ 'retina.js' | asset_url }}" defer></script>
+
+    {{ content_for_header }}
+
+    <script>
+      document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js');
+      if(window.Shopify&&window.Shopify.designMode)document.documentElement.className+=' in-theme-editor';
+    </script>
+    
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-59VQWLH');</script>
+<!-- End Google Tag Manager -->
+
+  
+    <!-- Global site tag (gtag.js) - Google Ads: 417828782 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-417828782"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-417828782');
+</script>
+    
+    <script>
+  gtag('event', 'page_view', {
+    'send_to': 'AW-417828782',
+    'value': 'replace with value',
+    'items': [{
+      'id': 'replace with value',
+      'google_business_vertical': 'retail'
+    }]
+  });
+</script>
+    
+    
+    <!-- Hotjar Tracking Code for https://www.wallando.de -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:2762693,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+    
+<!-- Facebook Domain Verfication für "Wallando.de" - Eingesetzt von Jason Martin !! NICHT ENTFERNEN & IMMER IN NEUE THEMES KOPIEREN !! -->
+<meta name="facebook-domain-verification" content="frzyxa4trtt02dcrcdr1fmmt6e864u" />
+    
+    
+<!-- Facebook Pixel Code für "Wallando.de" - Eingesetzt von Jason Martin !! NICHT ENTFERNEN & IMMER IN NEUE THEMES KOPIEREN !! -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1047571949369064');
+fbq('track', 'PageView’);
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1047571949369064&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+    
+  <!-- GSSTART Coming Soon code start. Do not change -->
+<script type="text/javascript"> gsProductByVariant = {}; {% if product.id > 1 %}{% for variant in product.variants %} gsProductByVariant[{{variant.id}}] = {% if variant.available %} 1 {% else %} 0 {% endif %}; {% endfor %}{% endif %}  gsProductCSID = "{{ product.id }}"; gsDefaultV = "{{ product.selected_or_first_available_variant.id }}"; </script><script  type="text/javascript" src="https://gravity-software.com/js/shopify/pac_shop37444.js?v=84d2faae6e19fe9f0021acf0621e56df"></script>
+<!-- Coming Soon code end. Do not change GSEND --></head>
+
+  <body
+          
+    class="{{ template | replace: '.', '-' | handle }} {{ template | split: '.' | first }}"
+    data-money-format="
+      {%- if settings.currency_format == 'money_with_currency_format' -%}
+        {{ shop.money_with_currency_format | strip_html }}
+      {%- else -%}
+        {{ shop.money_format | strip_html }}
+      {%- endif -%}
+    "
+    style="--full-header-height: 0;"
+    data-active-currency="{{ cart.currency.iso_code }}"
+    data-shop-url="{{ shop.url }}"
+    data-predictive-search="{{ settings.enable_autocomplete }}"
+  >
+    <a class="skip-to-main" href="#main-content">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59VQWLH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    
+    {% comment %}Inject icon-star-symbol begin{% endcomment %}
+    <svg
+      class="icon-star-reference"
+      aria-hidden="true"
+      focusable="false"
+      role="presentation"
+      xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="3 3 17 17" fill="none"
+    >
+      <symbol id="icon-star">
+        <rect class="icon-star-background" width="20" height="20" fill="currentColor"/>
+        <path d="M10 3L12.163 7.60778L17 8.35121L13.5 11.9359L14.326 17L10 14.6078L5.674 17L6.5 11.9359L3 8.35121L7.837 7.60778L10 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+      <clipPath id="icon-star-clip">
+        <path d="M10 3L12.163 7.60778L17 8.35121L13.5 11.9359L14.326 17L10 14.6078L5.674 17L6.5 11.9359L3 8.35121L7.837 7.60778L10 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </clipPath>
+    </svg>
+    {% comment %}Inject icon-star-symbol end{% endcomment %}
+
+
+    {% section 'header' %}
+
+    <main
+      id="main-content"
+      class="main-content--section-headings-{{ settings.section_heading_position }}"
+      role="main"
+    >
+      <div class="main__wrapper">
+        {{ content_for_layout }}
+      </div>
+    </main>
+
+    {% section 'footer' %}
+
+    {% if settings.newsletter_popup %}
+      {% render 'newsletter-popup' %}
+    {% endif %}
+
+    {% if settings.size_chart != blank and template contains 'product' %}
+      {% render 'size-chart-popup' %}
+    {% endif %}
+
+    {% render 'modal' %}
+    {% render 'gallery-modal' %}
+    {% render 'predictive-search' %}
+
+    {% if settings.cart_action == 'ajax' %}
+      {% render 'cart-drawer' %}
+    {% endif %}
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        (function () {
+          function handleFirstTab(e) {
+            if (e.keyCode === 9) { // the "I am a keyboard user" key
+              document.body.classList.add('user-is-tabbing');
+              window.removeEventListener('keydown', handleFirstTab);
+            }
+          }
+          window.addEventListener('keydown', handleFirstTab);
+        })();
+      });
+    </script>
+  
+<!-- Start Areviews style Code -->
+<style>@media (max-width: 450px){ #az_reviews .box_rating_container_style2,#az_reviews, .az_reviews {padding:0!important}.box_rating_container_style2{overflow: hidden;} }</style>
+<!-- End Areviews style Code -->
+</body>
+</html>

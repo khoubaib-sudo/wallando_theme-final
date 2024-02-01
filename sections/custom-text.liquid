@@ -1,0 +1,64 @@
+{% comment %} Assign object as block or section {% endcomment %}
+{% if type == 'block' %}
+  {%- assign object = block -%}
+{% else %}
+  {%- assign object = section -%}
+{% endif %}
+
+{% comment %} Content settings {% endcomment %}
+{%- assign custom_html = object.settings.custom_html -%}
+{% comment %} End content settings {% endcomment %}
+
+<section
+  class="custom-text"
+  data-section-id="{{ section.id }}"
+>
+  <div class="section__wrapper max-container custom-text text-align-center">
+  
+
+    {%- if object.settings.custom_header != blank -%}
+          <h2 class="h1 left-title">{{ object.settings.custom_header  | escape }}</h2>
+    {%- endif -%}
+
+    {% if custom_html != blank %}
+       <p><strong>{{ custom_html }}</strong></p>
+    {% else %}
+      <p class="custom-html__placeholder">
+        {{ 'homepage.onboarding.no_content' | t }}
+      </p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Text",
+  "class": "shopify-section--custom-html",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "custom_html",
+      "label": "HTML"
+    },
+    {
+      "type": "text",
+      "id": "custom_header",
+      "label": "Header"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Text",
+      "category": "Content",
+      "settings": {}
+    }
+  ],
+  "templates": [
+    "index",
+    "product",
+    "collection",
+    "page"
+  ]
+}
+
+{% endschema %}

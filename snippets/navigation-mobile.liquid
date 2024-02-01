@@ -1,0 +1,215 @@
+<nav class="navigation-mobile" data-mobile-nav tabindex="-1" aria-label="{{ 'layout.general.menu' | t }}">
+  <div class="navigation-mobile__overlay" data-mobile-overlay></div>
+  <div class="navigation-mobile__flyout" data-mobile-main-flyout>
+    <div class="navigation-mobile__flyout-header">
+      <div class="navigation-mobile__account">
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <a href="{{ routes.account_url }}" class="navigation-mobile__account-link">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM17 7C17 9.76142 14.7614 12 12 12C9.23858 12 7 9.76142 7 7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7ZM5 21C5 17.4421 8.10096 14.5 12 14.5C15.899 14.5 19 17.4421 19 21C19 21.2761 19.2239 21.5 19.5 21.5C19.7761 21.5 20 21.2761 20 21C20 16.8259 16.3852 13.5 12 13.5C7.61477 13.5 4 16.8259 4 21C4 21.2761 4.22386 21.5 4.5 21.5C4.77614 21.5 5 21.2761 5 21Z" fill="currentColor"/>
+              </svg>
+              {{ customer.name }}
+            </a>
+            (<a href="{{ routes.account_logout_url }}" class="navigation-mobile__sign-out">
+              {{ 'layout.customer.log_out' | t }}
+            </a>)
+          {% else %}
+            <a href="{{ routes.account_login_url }}" class="navigation-mobile__account-link">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM17 7C17 9.76142 14.7614 12 12 12C9.23858 12 7 9.76142 7 7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7ZM5 21C5 17.4421 8.10096 14.5 12 14.5C15.899 14.5 19 17.4421 19 21C19 21.2761 19.2239 21.5 19.5 21.5C19.7761 21.5 20 21.2761 20 21C20 16.8259 16.3852 13.5 12 13.5C7.61477 13.5 4 16.8259 4 21C4 21.2761 4.22386 21.5 4.5 21.5C4.77614 21.5 5 21.2761 5 21Z" fill="currentColor"/>
+              </svg>
+              {{ 'layout.customer.log_in' | t }}
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+      <button
+        class="navigation-mobile__close-button"
+        data-mobile-nav-close
+        aria-label="{{ 'general.accessibility.close' | t }}">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 13L13 1M13 13L1 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <ul class="mobile-menu">
+      {% for link in linklists[section.settings.main_linklist].links %}
+
+        <li class="main-nav__tier-1-item">
+          <a href="{{ link.url }}" class="main-nav__tier-1-link" {% if forloop.first %} style="display:none"{% endif %}>
+            {{ link.title | escape }}
+          </a>
+        </li>
+      
+        {% if link.links.size > 0 %}
+          {% for link_tier_2 in link.links %}
+            <li class="main-nav__tier-2-item">
+              <a href="{{ link_tier_2.url }}" class="main-nav__tier-1-link">
+                {{ link_tier_2.title | escape }}
+              </a>
+            </li>
+      
+            {% if link_tier_2.links.size > 0 %}
+              {% for link_tier_3 in link_tier_2.links %}
+                <li class="main-nav__tier-3-item">
+                  <a href="{{ link_tier_3.url }}" class="main-nav__tier-3-link">
+                    {{ link_tier_3.title | escape }}
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% if section.settings.social_icons_enabled or section.settings.show_currency_selector or section.settings.show_locale_selector %}
+      <div class="navigation-mobile__footer">
+        {% if section.settings.social_icons_enabled %}
+          {% render 'social-icons' %}
+        {% endif %}
+        {% if section.settings.show_currency_selector or section.settings.show_locale_selector %}
+          {%- assign currency_selector = section.settings.show_currency_selector -%}
+          {%- assign locale_selector = section.settings.show_locale_selector -%}
+          <div class="navigation-mobile__cross-border">
+            {% comment %}Inject @pixelunion/shopify-cross-border/cross-border begin{% endcomment %}
+            <div class="shopify-cross-border">
+              {% if locale_selector and localization.available_languages.size > 1 %}
+                {% comment %}Inject @pixelunion/shopify-cross-border/multi-language begin{% endcomment %}
+                {% comment %} Generate a "random" number so ids are unique {% endcomment %}
+                {% assign unique_id = "now" | date: "%N" | modulo: 1000 %}
+                <noscript>
+                  {%- form 'localization' -%}
+                    <details class="disclosure">
+                      <summary>
+                        <span class="disclosure__toggle">
+                          {{ form.current_locale.endonym_name | capitalize }}
+                        </span>
+                      </summary>
+                      <div class="disclosure-list disclosure-list--visible">
+                        {% for locale in form.available_locales %}
+                          <div class="disclosure-list__item-wrapper">
+                            <input
+                              type="radio"
+                              id="{{ locale.iso_code }}"
+                              class="disclosure-list__item"
+                              name="locale_code"
+                              value="{{ locale.iso_code }}"
+                              {% if locale.iso_code == form.current_locale.iso_code %}checked{% endif %}
+                            >
+                            <label class="disclosure-list__item--label" for="{{ locale.iso_code }}">{{ locale.endonym_name | capitalize }}</label>
+                          </div>
+                        {% endfor %}
+                        <button class="disclosure__submit" type="submit">{{ 'general.language.submit_button_label' | t }}</button>
+                      </div>
+                    </details>
+                  {%- endform -%}
+                </noscript>
+                
+                {%- form 'localization' -%}
+                  <div class="selectors-form__item selectors-form--no-js-hidden">
+                    <div class="disclosure" data-disclosure-locale>
+                      <h2 class="visually-hidden" id="lang-heading-{{ unique_id }}">
+                        {{ 'general.language.dropdown_label' | t }}
+                      </h2>
+                
+                      <button
+                        type="button"
+                        class="disclosure__toggle"
+                        aria-expanded="false"
+                        aria-controls="lang-list-{{ unique_id }}"
+                        aria-describedby="lang-heading-{{ unique_id }}"
+                        data-disclosure-toggle
+                      >
+                        {{ form.current_locale.endonym_name | capitalize }}
+                      </button>
+                      <ul id="lang-list-{{ unique_id }}" class="disclosure-list" data-disclosure-list>
+                        {% for locale in form.available_locales %}
+                          <li>
+                            <a class="disclosure-list__item {% if locale.iso_code == form.current_locale.iso_code %}disclosure-list__item--current{% endif %}" href="#" lang="{{ locale.iso_code }}" {% if locale.iso_code == form.current_locale.iso_code %}aria-current="true"{% endif %} data-value="{{ locale.iso_code }}" data-disclosure-option>
+                              <span class="disclosure-list__option">{{ locale.endonym_name | capitalize }}</span>
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                      <input type="hidden" name="locale_code" id="LocaleSelector-{{ unique_id }}" value="{{ form.current_locale.iso_code }}" data-disclosure-input/>
+                    </div>
+                  </div>
+                {%- endform -%}
+                {% comment %}Inject @pixelunion/shopify-cross-border/multi-language end{% endcomment %}
+            
+              {% endif %}
+            
+              {% if currency_selector and localization.available_countries.size > 1 %}
+                {% comment %}Inject @pixelunion/shopify-cross-border/multi-currency begin{% endcomment %}
+                {% comment %} Generate a "random" number so ids are unique {% endcomment %}
+                {% assign unique_id = "now" | date: "%N" | modulo: 1000 %}
+                <noscript>
+                  {%- form 'localization' -%}
+                    <details class="disclosure">
+                      <summary>
+                        <span class="disclosure__toggle">
+                          {{ form.current_currency.iso_code }} {%- if form.current_currency.symbol -%}{{ form.current_currency.symbol }}{%- endif -%}
+                        </span>
+                      </summary>
+                      <div class="disclosure-list disclosure-list--visible">
+                        {% for currency in form.available_currencies %}
+                          <div class="disclosure-list__item-wrapper">
+                            <input
+                              type="radio"
+                              id="{{ currency.iso_code }}"
+                              class="disclosure-list__item"
+                              name="currency_code"
+                              value="{{ currency.iso_code }}"
+                              {% if currency.iso_code == form.current_currency.iso_code %}checked{% endif %}
+                            >
+                            <label class="disclosure-list__item--label" for="{{ currency.iso_code }}">{{ currency.iso_code }} {%- if currency.symbol -%}{{ currency.symbol }}{%- endif -%}</label>
+                          </div>
+                        {% endfor %}
+                        <button class="disclosure__submit" type="submit">{{ 'general.currency.submit_button_label' | t }}</button>
+                      </div>
+                  {%- endform -%}
+                </noscript>
+                
+                {%- form 'localization' -%}
+                  <div class="selectors-form__item selectors-form--no-js-hidden">
+                    <div class="disclosure" data-disclosure-currency>
+                      <h2 class="visually-hidden" id="currency-heading-{{ unique_id }}">
+                        {{ 'general.currency.dropdown_label' | t }}
+                      </h2>
+                
+                      <button
+                        type="button"
+                        class="disclosure__toggle"
+                        aria-expanded="false"
+                        aria-controls="currency-list-{{ unique_id }}"
+                        aria-describedby="currency-heading-{{ unique_id }}"
+                        data-disclosure-toggle
+                      >
+                        {{ form.current_currency.iso_code }} {%- if form.current_currency.symbol -%}{{ form.current_currency.symbol }}{%- endif -%}
+                      </button>
+                      <ul id="currency-list-{{ unique_id }}" class="disclosure-list" data-disclosure-list>
+                        {% for currency in form.available_currencies %}
+                          <li>
+                            <a class="disclosure-list__item {% if currency.iso_code == form.current_currency.iso_code %}disclosure-list__item--current{% endif %}" href="#" {% if currency.iso_code == form.current_currency.iso_code %}aria-current="true"{% endif %} data-value="{{ currency.iso_code }}" data-disclosure-option>
+                              <span class="disclosure-list__option">{{ currency.iso_code }} {%- if currency.symbol -%}{{ currency.symbol }}{%- endif -%}</span>
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                      <input type="hidden" name="currency_code" id="CurrencySelector-{{ unique_id }}" value="{{ form.current_currency.iso_code }}" data-disclosure-input/>
+                    </div>
+                  </div>
+                {%- endform -%}
+                {% comment %}Inject @pixelunion/shopify-cross-border/multi-currency end{% endcomment %}
+            
+              {% endif %}
+            </div>
+            {% comment %}Inject @pixelunion/shopify-cross-border/cross-border end{% endcomment %}
+
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</nav>

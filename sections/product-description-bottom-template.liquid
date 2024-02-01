@@ -1,0 +1,77 @@
+{%- assign collection_handles = product.collections | map: 'handle' -%}
+{% if section.blocks.size > 0 %}
+  {%- assign sidebar_enabled = true -%}
+{% else %}
+  {%- assign sidebar_enabled = false -%}
+{% endif %}
+{% assign toggle = section.settings.toggle %}
+
+{%
+  render 'product-section-data',
+  product: product
+%}
+
+<section
+  class="product-page"
+  data-section-id="{{ section.id }}"
+  data-section-type="product-description-bottom-template"
+  data-product-component
+>
+
+  {% if sidebar_enabled %}
+    <div class="section-with-sidebar__wrapper">
+      <aside
+        class="
+          sidebar
+          product-page__sidebar
+          {% if section.settings.sidebar_mobile_position == 'below' %}product-page__sidebar--hide-mobile{% endif %}
+        "
+        data-sidebar
+        data-sidebar-top
+        aria-label="{{ 'general.accessibility.sidebar' | t }}"
+        data-has-toggle="{{ toggle }}"
+      >
+        {%
+          render 'sidebar-content',
+          toggle: toggle
+        %}
+      </aside>
+  {% endif %}
+
+  <div class="product-page__content">
+    <div class="breadcrumbs-wrapper">
+      {% render 'breadcrumbs' %}
+    </div>
+
+    {%
+      render 'product',
+      product: product,
+      select_first_available_variant: settings.select_first_available_variant,
+      template: 'product-description-bottom',
+      collection_handles: collection_handles,
+      sidebar_enabled: sidebar_enabled
+    %}
+  </div>
+
+  {% if sidebar_enabled %}
+    </div>
+  {% endif %}
+
+  {% if section.settings.sidebar_mobile_position == 'below' and sidebar_enabled %}
+    <aside
+      class="
+        sidebar
+        product-page__bottom-sidebar
+      "
+      data-sidebar
+      data-sidebar-bottom
+      aria-label="{{ 'general.accessibility.sidebar' | t }}"
+      data-has-toggle="{{ toggle }}"
+    >
+      {%
+        render 'sidebar-content',
+        toggle: toggle
+      %}
+    </aside>
+  {% endif %}
+</section>

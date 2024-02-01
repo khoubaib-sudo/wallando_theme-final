@@ -1,0 +1,36 @@
+<section
+  class="error-page"
+  data-section-id="{{ section.id }}"
+>
+
+  <div class="error-page__header">
+    <h1 class="error-page__heading">
+      {{ 'general.404.title' | t }}
+    </h1>
+  </div>
+
+  <div class="error-page__content-wrapper text-align-center">
+    <p class="error-page__quote">
+      {{ 'general.404.subtext' | t }}
+    </p>
+
+    <p
+      class="error-page__continue-shopping
+      text-align-center"
+    >
+      {{ 'general.404.continue_shopping_html' | t }}
+    </p>
+
+    <div
+      class="error-page__search"
+    >
+      <form
+        class="search"
+        action="{{ routes.search_url }}"
+      >
+        <input type="hidden" name="type" value="{{ settings.search_option }}" />
+      </form>
+    </div>
+  </div>
+
+</section>

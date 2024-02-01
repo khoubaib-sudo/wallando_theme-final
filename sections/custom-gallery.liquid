@@ -1,0 +1,121 @@
+{% liquid
+  assign image = section.settings.image
+  assign image_two = section.settings.image_two
+  assign image_three = section.settings.image_three
+  assign image_four = section.settings.image_four
+  assign image_five = section.settings.image_five
+%}
+
+<!-- gallery -->
+
+<div class="max-container custom-gallery-container">
+  {% if shop.locale == 'de' %}
+    <h2 class="h1 center-title">Vielseitig anwendbar</h2>
+    <h5>
+      <strong>Anwendbar</strong> in <strong>Küche</strong>, <strong>Bad</strong> und in deiner
+      <strong>Wohnung</strong> oder in deinem <strong>Haus</strong>, zum Schutz im Eingangsbereich bei Haustierbesitzern
+      oder generell um deine Wand oder Putz zu schützen
+    </h5>
+  {% elsif shop.locale == 'fr' %}
+    <h2 class="h1 center-title">Applications multiples</h2>
+    <h5>
+      Les panneaux muraux s‘invitent dans votre salle de bains, dans votre cuisine, dans votre appartement, dans votre
+      maison, dans votre entrée ou tout simplement sont posés pour protégér votre mur ou votre plâtre.
+    </h5>
+  {% endif %}
+
+  <div class="container_center gallery-container">
+    {% if section.settings.image %}
+      {% render 'rimg', img: image, alt: alt, size: '1500x', lazy: false, crop: crop, class: 'gallery-small-one' %}
+    {% endif %}
+
+    {% if section.settings.image_two %}
+      {% render 'rimg', img: image_two, alt: alt, size: '1500x', lazy: false, crop: crop, class: 'gallery-small-two' %}
+    {% endif %}
+
+    {% if section.settings.image_three %}
+      {% render 'rimg',
+        img: image_three,
+        alt: alt,
+        size: '1500x',
+        lazy: false,
+        crop: crop,
+        class: 'gallery-small-three'
+      %}
+    {% endif %}
+
+    {% if section.settings.image_four %}
+      {% render 'rimg',
+        img: image_four,
+        alt: alt,
+        size: '1500x',
+        lazy: false,
+        crop: crop,
+        class: 'gallery-small-four'
+      %}
+    {% endif %}
+
+    {% if section.settings.image_five %}
+      {% render 'rimg',
+        img: image_five,
+        alt: alt,
+        size: '1500x',
+        lazy: false,
+        crop: crop,
+        class: 'gallery-small-five'
+      %}
+    {% endif %}
+
+    {% if shop.locale == 'de' %}
+      <div class="gallery-big-message">
+        <h4>Setzt schöne Akzente</h4>
+        <p>Wo vorher nur eintöniges grau in grau war, kannst du mit deiner Wandverkleidung tolle Farbakzente setzen</p>
+      </div>
+    {% elsif shop.locale == 'fr' %}
+      <div class="gallery-big-message">
+        <h4>Coloris tendance pour un décor épuré</h4>
+        <p>Déclinés dans différents coloris, les revêtements muraux créent un espace design</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Gallery",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_two",
+      "label": "Image Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_three",
+      "label": "Image Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_four",
+      "label": "Image Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_five",
+      "label": "Image Logo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Gallery",
+      "category": "custom",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

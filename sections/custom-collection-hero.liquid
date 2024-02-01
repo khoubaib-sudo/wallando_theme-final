@@ -1,0 +1,82 @@
+{% liquid
+    if collection.image != blank
+      assign image = collection.image
+    else
+     assign image = section.settings.image
+    endif
+     assign image = section.settings.image
+-%}
+   {% comment %} <div class="max-container ">{% render 'breadcrumbs' %}</div>  {% endcomment %}
+  <div class="max-container max-hero-container collection-hero-container">
+
+    <a href="#collectionBegin" class="arrow-down"><svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <rect width="61" height="61" fill="url(#pattern0)"/>
+      <defs>
+      <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+      <use xlink:href="#image0_40_38" transform="scale(0.0111111)"/>
+      </pattern>
+      <image id="image0_40_38" width="90" height="90" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAABmJLR0QA/wD/AP+gvaeTAAABcklEQVR4nO3avU4CQRhG4cFC1BsnMSbUFHoRFsQrsjGxwJ/2WMg2usDu7OzyDXuexJLs+50QQiIpSZIkSZIkSZIkSZIkSZKCABbAIvf1VxkPvAU2wCfwBtwDy9wB0QFL4CGl9J5S+gYegbspHrzhv+0lxt5H3rbc+zT2gxfAR8uDLy72kcgAX0DvT4O+A3YHHn4xsU9EBthNMWJ9ZED1sTtEBlhHGVJl7HC3AdfA84lBL8DNJIMKCHtT2GEZwt8SfmAH1dxQzdAW1W2vbnCqc3NKqa7hNW1tVcMBNWzsJPIhkbdliXhQxE1FRDos0pZRRDgwwoZJnPPQ2URunOPg2UVuTHn4bCM3pggw+8iNMUMY+Y8xghj5gJJhjHxCiUBG7mhIKCP3lBPMyJn6hDPyQHT/d3+cnwTUquO71XdyCQNiG7mvjNhGztUjtpGH6hDbyKUciW3k0vj96rcCXvd/K/wKJ0mSJEmSJEmSJEmSJEma3g+cPyk7WuprsQAAAABJRU5ErkJggg=="/>
+      </defs>
+      </svg>
+      </a>
+    <div class="proven-expert"><img class="proven-expert-collection-img" src="{{ 'Screenshot_205_1.png' | file_url }}" alt="proven expert">
+    </div>
+
+    {%- if image != blank -%}
+    {% assign alt = image.alt %}
+    {% assign crop = crop | default: 'center' %}
+  
+      {%
+        render 'rimg'
+        img: image,
+        alt: alt,
+        size: '1500x',
+        lazy: false,
+        crop: crop
+      %}
+   
+    {%- endif -%}
+
+    {% if section.settings.custom_header != blank %}
+        <div class="collection-header-container">
+            <h1 class="custom-collection-header">
+                {{section.settings.custom_header}}
+            </h1>
+        </div>
+    {% endif %}
+
+  </div>
+
+  
+  
+  {% schema %}
+  {
+    "name": "Collection Hero",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image Logo"
+      },
+    {
+      "type": "text",
+      "id": "custom_header",
+      "label": "Header"
+    }
+    ],
+    "presets": [
+      {
+        "name": "Collection Hero",
+        "category": "custom",
+        "settings": {}
+      }
+    ],
+    "templates": [
+      "index",
+      "product",
+      "collection",
+      "page"
+    ]
+  }
+  
+  {% endschema %}

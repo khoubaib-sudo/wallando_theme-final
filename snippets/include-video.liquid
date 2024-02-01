@@ -1,0 +1,370 @@
+{% if type == 'block' %}
+  {%- assign object = block -%}
+{% else %}
+  {%- assign object = section -%}
+{% endif %}
+
+{% liquid
+  assign section_id = object.id
+  assign overlay_heading = object.settings.heading | escape
+  assign overlay_text = object.settings.subtext | escape
+  assign overlay_text_position = object.settings.text_position
+  assign overlay_image = object.settings.image
+  assign overlay_text_color = object.settings.overlay_text_color
+  assign video = object.settings.video
+  assign autoplay = object.settings.autoplay
+  assign start_muted = object.settings.mute_video
+  assign loop_video = object.settings.autoloop
+  assign aspect_ratio = object.settings.aspect_ratio
+  assign call_to_action_text = object.settings.button_label | escape
+  assign call_to_action_link = object.settings.link
+  assign html5_video = object.settings.html5_video
+  assign show_headings_above_video = false
+  assign show_overlay = true
+  assign overlay_opacity = 0
+
+  if overlay_image
+    assign placeholder_image = true
+  else
+    assign placeholder_image = false
+  endif
+
+  if call_to_action_text and call_to_action_link
+    assign call_to_action = true
+  else
+    assign call_to_action = false
+  endif
+
+  if aspect_ratio == '16:9'
+    assign aspect_ratio_class = '16-9'
+  else
+    assign aspect_ratio_class = '4-3'
+  endif
+%}
+
+{%- if object.settings.overlay_color != blank and object.settings.overlay_color != 'rgba(0,0,0,0)' -%}
+  {%- assign overlay_color = object.settings.overlay_color -%}
+{%- endif -%}
+
+{%- if object.settings.overlay_opacity > 0 -%}
+  {%- assign overlay_opacity = object.settings.overlay_opacity | times: 0.01 -%}
+{%- endif -%}
+
+{%- if overlay_color -%}
+  {%- assign overlay_color = overlay_color | color_modify: 'alpha', overlay_opacity -%}
+{%- endif -%}
+
+{%- capture video_classes -%}
+  video-section--width-wide-{{ object.settings.wide_display }}
+  video-section--dark-overlay-enabled-{{ object.settings.video_dark_overlay }}
+  video-section--placeholder-image-enabled-{{ placeholder_image }}
+  video-section--text-shadow-enabled-{{ object.settings.enable_text_shadow }}
+  video-section--call-to-action-enabled-{{ call_to_action }}
+{%- endcapture -%}
+
+
+{%- capture wrapper_classes -%}
+  video-section__wrapper--aspect-ratio-{{ aspect_ratio_class }}
+  video-section__wrapper--show-text-while-playing-{{ object.settings.display_text_over_video }}
+{%- endcapture -%}
+
+{% comment %}Inject @pixelunion/pxs-video/video begin{% endcomment %}
+{%- comment -%}
+
+  # General
+  @param video_classes {String}
+    A space separated list of classnames to add to the video section element
+
+  @param wrapper_classes {String}
+    A space separated list of classnames to add to the video internal wrapper element
+
+  @param section_id {String}
+    The id for the section or block
+
+  # Section Settings
+
+  @param show_headings_above_video {Boolean}
+    If set to true, the headings will appear above the video
+
+  @param section_heading {String} Optional
+    Section heading
+
+  @param section_subheading {String} Optional
+    Section subheading
+
+  @param treat_as_banner {Boolean} Optional
+    If this is set to true an attribute will be added to treat this as a banner. Usually important for the header if it is transparent.
+
+  # Video Settings
+
+  @param video {Object}
+    The video object for the YouTube or Vimeo video url entered
+
+  @param html5_video {String}
+    The HTML5 video url for media uploaded to the settings admin
+
+  @param autoplay {Boolean}
+    If set to true, the video will play automatically
+
+  @param start_muted {Boolean}
+    If set to true, the video will start with the sound turned off
+
+  @param loop_video {Boolean}
+    If set to true, the video will loop
+
+  @param aspect_ratio {String}
+    Updates the aspect ratio for the video player
+
+  # Overlay Settings
+
+  @param show_overlay {Boolean}
+    If set to true, an image will be placed over the video.
+    If no image is uploaded then a placeholder image will be used.
+    This also affects if the overlay color is added.
+
+  @param overlay_image {Object}
+    The overlay image to be used
+
+  @param overlay_image_crop {String}
+    Cropping for the overlay image
+
+  @param overlay_color {String}
+    Overlay color used for inline style
+
+  @param overlay_text_color {String}
+    Overlay text color used for inline style
+
+  @param overlay_opacity {Number}
+    Overlay opacity used for inline style
+
+  @param overlay_heading {String}
+    The video heading to appear in the overlay
+
+  @param overlay_text {String}
+    The video subheading to appear in the overlay
+
+  @param overlay_text_position {String}
+    Sets the text position of the overlay header content
+
+  # Text Settings
+
+  @param preheading {String}
+    Preheading to show above the video
+
+  @param heading {String}
+    Heading to show above the video
+
+  @param subheading {String}
+    Subheading to show above the video
+
+  # Button Settings
+
+  @param play_button_style {String}
+    Class added to the play button
+
+  @param call_to_action_text {String}
+    This will add a call to action link inside the overlay
+
+  @param call_to_action_link {String}
+    This will populate the href of the call to action link
+
+{%- endcomment -%}
+
+{% liquid
+  assign treat_as_banner = treat_as_banner | default: false
+  assign overlay_image_crop = overlay_image_crop | default: 'center'
+
+  if section_id == blank
+    assign section_id = section.id
+  endif
+
+  if video != blank
+    assign video_type = video.type
+    assign video_id = video.id
+  elsif html5_video != blank
+    assign video_type = 'html5'
+    assign video_id = html5_video.id
+  else
+    assign video_type = 'youtube'
+    assign video_id ='_9VUPq3SxOc'
+  endif
+%}
+
+<script
+  type="application/json"
+  data-section-type="pxs-video"
+  data-section-id="{{ section_id }}"
+  data-section-data
+>
+  {
+    "autoplay": {{ autoplay | default: false | json }},
+    "startMuted": {{ start_muted | default: false | json }},
+    "loopVideo": {{ loop_video | default: false | json }},
+    "aspectRatio": {{ aspect_ratio | json }}
+  }
+</script>
+
+<section
+  class="
+    video-section
+    {{ video_classes }}
+  "
+  aria-label="{{ 'sections.video.video' | t }}"
+  data-banner="{{ treat_as_banner }}"
+>
+
+  {%- if section_heading != blank or section_subheading != blank -%}
+    <div class="section__header section__header--video">
+      {%- if section_heading != blank -%}
+        <h2 class="section__heading section__heading--video">
+          {{ section_heading }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section_subheading != blank -%}
+        <div class="section__subheading section__subheading--video rte">
+          {{ section_subheading }}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {% if show_headings_above_video %}
+    {%
+      if heading != blank or subheading != blank or preheading != blank
+    %}
+      <div class="video-section__header">
+        {% if preheading != blank %}
+          <div class="video-section__preheading">
+            {{ preheading }}
+          </div>
+        {% endif %}
+
+        {% if heading != blank %}
+          <h2 class="video-section__heading">
+            {{ heading }}
+          </h2>
+        {% endif %}
+
+        {% if subheading != blank %}
+          <div class="video-section__subheading">
+            {{ subheading }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+  <div
+    class="
+      video-section__wrapper
+      {{ wrapper_classes }}
+    "
+  >
+    {% if show_overlay %}
+      <div
+        class="video-section__overlay"
+        {%
+          if overlay_color != blank
+          or overlay_opacity != 0
+          or overlay_text_color != blank
+        %}
+          style="
+            {%- if overlay_color != blank -%}
+              --overlay-color: {{ overlay_color }};
+            {%- endif -%}
+            {%- if overlay_opacity != 0 -%}
+              --overlay-opacity: {{ overlay_opacity }};
+            {%- endif -%}
+            {%- if overlay_text_color != blank -%}
+              --overlay-text-color: {{ overlay_text_color }};
+            {%- endif -%}
+          "
+        {% endif %}
+      >
+        {% if overlay_image %}
+          <div class="video-section__overlay-image-wrapper">
+            {%
+              render 'rimg',
+              img: overlay_image,
+              size: '1400x',
+              class: 'video-section__overlay-image',
+              crop: overlay_image_crop,
+              canvas: true,
+              lazy: true
+            %}
+          </div>
+        {% elsif video == blank and html5_video == blank %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'video-section__overlay-image video-section__overlay-placeholder' }}
+        {% endif %}
+
+        <div class="
+          video-section__overlay-header
+          video-section__overlay-header--text-position-{{ overlay_text_position }}
+        ">
+          {% if overlay_heading != blank %}
+            <p class="video-section__overlay-heading">{{ overlay_heading }}</p>
+          {% endif %}
+
+          {% if overlay_text != blank %}
+            <div class="video-section__overlay-subheading">{{ overlay_text }}</div>
+          {% endif %}
+
+          <div class="video-section__button-wrapper">
+            <button
+              class="
+                video-section__play-button
+                {% if play_button_style != blank %}
+                  video-section__play-button--{{ play_button_style }}
+                {% endif %}
+              "
+              data-video-play-button
+              aria-label="{{ 'sections.video.play_button' | t }}"
+            >
+              <span class="video-section__play-icon">
+                <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 18.1958C0 18.9812 0.863951 19.46 1.53 19.0438L14.6432 10.848C15.2699 10.4563 15.2699 9.54367 14.6432 9.152L1.53 0.956248C0.863949 0.539968 0 1.01881 0 1.80425L0 18.1958Z" fill="white"/>
+                </svg>
+              </span>
+              <span class="video-section__play-button-text">
+                {{ 'sections.video.play_button' | t }}
+              </span>
+              <div class="video-section__loading-icon">
+                <div class="video-section__loading-icon-animation"></div>
+              </div>
+            </button>
+
+            {% if call_to_action_text != blank and call_to_action_link != blank %}
+              <a class="video-section__call-to-action" href="{{ call_to_action_link }}">
+                {{ call_to_action_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div
+      class="
+        video-section__video
+        video-section__video--{{ video_type }}
+        {% if show_overlay %}
+        video-section__video--with-overlay
+        {% endif %}
+      "
+      data-video="{{ video_type }}"
+      data-video-id="{{ video_id }}"
+      tabindex="0"
+    >
+      {% if video == blank and html5_video != blank %}
+        <video
+          class="video-section__html5-video"
+          data-html5-video
+          playsinline
+        >
+          <source src="{{ html5_video }}">
+        </video>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% comment %}Inject @pixelunion/pxs-video/video end{% endcomment %}

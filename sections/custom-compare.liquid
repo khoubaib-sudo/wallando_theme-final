@@ -1,0 +1,145 @@
+{% liquid
+  assign image = section.settings.image
+%}
+
+<!-- Compare -->
+<div class="max-container">
+  {% if section.settings.heading %}
+    {% if shop.locale == 'de' %}
+      <h2 class="h1 center-title">Warum unsere Kunden uns lieben</h2>
+    {% elsif shop.locale == 'fr' %}
+      <h2 class="h1 center-title">Pourquoi nos clients nous aiment</h2>
+    {% endif %}
+  {% endif %}
+  <div class="container_center">
+    {% if shop.locale == 'de' %}
+      <div class="compare-container">
+        <div class="wallando">
+          {%- if image != blank -%}
+            {% assign alt = image.alt | default: heading %}
+            {% assign crop = crop | default: 'center' %}
+            {% render 'rimg', img: image, alt: alt, size: '1500x', lazy: false, crop: crop, class: 'left-fold-logo' %}
+          {%- endif -%}
+        </div>
+        <div class="normal">
+          <p>
+            normale <span class="hide-desktop">Wandver-kleidung</span><span class="hide-mobile"> Wandverkleidung</span>
+          </p>
+        </div>
+        <div class="list"></div>
+        <div class="overlay"></div>
+        <div class="first-list">
+          <p>Aufklebbar auf jeden Untergrund</p>
+        </div>
+        <div class="second-list">
+          <p>Maximal einen Tag Montagearbeiten</p>
+        </div>
+        <div class="third-list">
+          <p>Einfache Montage ohne Werkzeuge</p>
+        </div>
+        <div class="fourth-list">
+          <p>Kein langes warten auf den Handwerker</p>
+        </div>
+        <div class="fifth-list">
+          <p>Unkompliziert austauschbar</p>
+        </div>
+        <div class="check-one centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-two centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-three centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-four centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-five centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="cross-one cross centered">&#10540;</div>
+        <div class="cross-two cross centered">&#10540;</div>
+        <div class="cross-three cross centered">&#10540;</div>
+        <div class="cross-four cross centered">&#10540;</div>
+        <div class="cross-five cross centered">&#10540;</div>
+      </div>
+    {% elsif shop.locale == 'fr' %}
+      <div class="compare-container">
+        <div class="wallando">
+          {%- if image != blank -%}
+            {% assign alt = image.alt | default: heading %}
+            {% assign crop = crop | default: 'center' %}
+            {% render 'rimg', img: image, alt: alt, size: '1500x', lazy: false, crop: crop, class: 'left-fold-logo' %}
+          {%- endif -%}
+        </div>
+        <div class="normal">
+          <p>revêtement mural normal</p>
+        </div>
+        <div class="list"></div>
+        <div class="overlay"></div>
+        <div class="first-list">
+          <p>Peut être collé sur n'importe quel support</p>
+        </div>
+        <div class="second-list">
+          <p>Une journée de montage maximum</p>
+        </div>
+        <div class="third-list">
+          <p>Montage facile sans outils</p>
+        </div>
+        <div class="fourth-list">
+          <p>Pas de longue attente de l'artisan</p>
+        </div>
+        <div class="fifth-list">
+          <p>Remplacement facile</p>
+        </div>
+        <div class="check-one centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-two centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-three centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-four centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="check-five centered">
+          {% include 'check-svg' %}
+        </div>
+        <div class="cross-one cross centered">&#10540;</div>
+        <div class="cross-two cross centered">&#10540;</div>
+        <div class="cross-three cross centered">&#10540;</div>
+        <div class="cross-four cross centered">&#10540;</div>
+        <div class="cross-five cross centered">&#10540;</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Compare",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading",
+      "label": "Show heading",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Compare",
+      "category": "custom",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
