@@ -43,42 +43,69 @@
       <p class="cart-drawer__empty">Il n'y a pas d'articles dans ton panier.</p>
     </div>
   {% else %}
-    {% unless cart.item_count == 0 %}
-      <div class="german-content">
-        <div class="great-choice">
-          <img
-            class="check-img"
-            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/icons8-checked-checkbox-90_1_3.png?v=1665046214"
-            class="cart-drawer__icon"
-            alt=""
-          >
-          <span>
-            <strong>Gute Wahl!</strong>
-            Hier ist deine Wandverkleidung</span
-          >
-        </div>
-      </div>
-      <div class="french-content">
-        <div class="great-choice">
-          <img
-            class="check-img"
-            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/icons8-checked-checkbox-90_1_3.png?v=1665046214"
-            class="cart-drawer__icon"
-            alt=""
-          >
-          <span>
-            <strong>Bon choix!</strong>
-            Voici ton revêtement mural</span
-          >
-        </div>
-      </div>
-
-      <div class="social-proof">
-        <img src="  https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Group_630.svg?v=1680175727" class="" alt="">
-      </div>
-    {% endunless %}
-
+    
     <form class="cart-drawer__form" action="{{ routes.cart_url }}" method="post" id="cart_form">
+    <div class="quick-cart__total">
+          <div>
+            <div class="german-content">
+              <span class="p-med cart-titel">{{ 'cart.general.subtotal' | t }}</span>
+            </div>
+            <div class="french-content">
+              <span class="p-med cart-titel">Sous-total</span>
+            </div>
+            <p class="cart-drawer__cart-total">
+              <span class="money" style="color: #4CAF50;">{{ cart.total_price | money_with_currency }}</span>
+            </p>
+          </div>
+          
+          <div class="cart-drawer__delivery-info">
+            <img src="https://1000logos.net/wp-content/uploads/2018/08/DHL-Logo.png" alt="DHL Logo" class="dhl-logo" />
+            <p class="delivery-text">Mit DHL innerhalb von 2-3 Werktagen geliefert.</p>
+          </div>
+        </div>
+      <div class="german-content">
+          <div class="cart-drawer__checkout-buttons">
+            <input
+  data-cart-submit
+  type="submit"
+  class="cart-drawer__checkout animate-pulse"
+  id="checkout"
+  name="checkout"
+  value="{{ 'cart.general.checkout' | t }}"
+  style="background-color: #ffd700; color: #000; font-weight: bold; border: none; padding: 15px; border-radius: 5px; margin-bottom: 10px; width: 100%;"
+>
+            
+            <!-- Continue Shopping Button -->
+            <button 
+      type="button" 
+      class="cart-drawer__continue-shopping" 
+      onclick="history.back();"
+      style="background-color: transparent; color: #000; border: 1px solid #ccc; padding: 15px; border-radius: 5px; width: 100%;"
+    >
+      Einkauf fortsetzen
+    </button>
+          </div>
+        </div>
+        <div class="french-content">
+          <div class="cart-drawer__checkout-buttons">
+            <input
+              data-cart-submit
+              type="submit"
+              class="cart-drawer__checkout"
+              id="checkout"
+              name="checkout"
+              value="Passer à la caisse en toute sécurité"
+            >
+            <input
+              data-cart-submit
+              type="submit"
+              class="cart-drawer__view-cart"
+              id="view-cart"
+              name="view-cart"
+              value="Voir le panier"
+            >
+          </div>
+        </div>
       <div class="cart-drawer__items">
         {% for item in cart.items %}
           <div class="cart-drawer__item">
@@ -136,11 +163,11 @@
 
                 <div class="item-info__price">
                   {% if item.line_level_discount_allocations.size > 0 %}
-                    <span class="money">
+                    <span class="money" style="color: #4CAF50;">
                       {% render 'price-element', price: item.final_line_price %}
                     </span>
                   {% endif %}
-                  <span class="money {% if item.line_level_discount_allocations.size > 0 %}hidden{% endif %}">
+                  <span class="money {% if item.line_level_discount_allocations.size > 0 %}hidden{% endif %}" style="color: #4CAF50;">
                     {% render 'price-element', price: item.original_line_price %}
                   </span>
 
@@ -267,27 +294,7 @@
           </ul>
         {% endif %}
 
-        <div class="quick-cart__total">
-          <div>
-            <div class="german-content">
-              <span class="p-med cart-titel">{{ 'cart.general.subtotal' | t }}</span>
-            </div>
-            <div class="french-content">
-              <span class="p-med cart-titel">Sous-total</span>
-            </div>
-            <p class="cart-drawer__cart-total">
-              <span class="money">{{ cart.total_price | money_with_currency }}</span>
-            </p>
-          </div>
-          <div>
-            <div class="german-content">
-              <span class="p-med cart-titel">Versand & Retouren kostenlos</span>
-            </div>
-            <div class="french-content">
-              <span class="p-med cart-titel">Expédition & Retours gratuit</span>
-            </div>
-          </div>
-        </div>
+        
 
         <!--
           <p class="cart-drawer__minor-text">
@@ -313,86 +320,6 @@
             </label>
           </div>
         {% endif %}
-
-        <div class="german-content">
-          <div class="cart-drawer__checkout-buttons">
-            <input
-              data-cart-submit
-              type="submit"
-              class="cart-drawer__checkout"
-              id="checkout"
-              name="checkout"
-              value="{{ 'cart.general.checkout' | t }}"
-            >
-            <input
-              data-cart-submit
-              type="submit"
-              class="cart-drawer__view-cart"
-              id="view-cart"
-              name="view-cart"
-              value="{{ 'layout.general.view_cart' | t }}"
-            >
-          </div>
-        </div>
-        <div class="french-content">
-          <div class="cart-drawer__checkout-buttons">
-            <input
-              data-cart-submit
-              type="submit"
-              class="cart-drawer__checkout"
-              id="checkout"
-              name="checkout"
-              value="Passer à la caisse en toute sécurité"
-            >
-            <input
-              data-cart-submit
-              type="submit"
-              class="cart-drawer__view-cart"
-              id="view-cart"
-              name="view-cart"
-              value="Voir le panier"
-            >
-          </div>
-        </div>
-
-        <div class="cart-benefit">
-          <img
-            alt="Delivered to your doorstep in no time. icon"
-            class="icon"
-            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/delivery-fast.svg?v=1699271892"
-          >
-
-          <div class="german-content">
-            <p>In 2-3 Werktagen bei dir.</p>
-          </div>
-          <div class="french-content">
-            <p>Chez toi dans 2-3 jours ouvrables</p>
-          </div>
-          <img
-            alt="Delivered to your doorstep in no time. icon"
-            class="icon"
-            src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/2560px-Klarna_Payment_Badge_2.png?v=1662719318"
-          >
-
-          <div class="german-content">
-            <p>Kauf auf Rechnung & bezahle nach 30 Tagen</p>
-          </div>
-          <div class="french-content">
-            <p>Acheter sur facture & payer après 30 jours</p>
-          </div>
-          <img
-            alt="Delivered to your doorstep in no time. icon"
-            class="icon"
-            src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/loss_8.png?v=1662719319"
-          >
-
-          <div class="german-content">
-            <p>10 Jahre Garantie & Made in Germany</p>
-          </div>
-          <div class="french-content">
-            <p>10 ans de garantie & Livraison rapide</p>
-          </div>
-        </div>
       </div>
     </form>
   {% endif %}

@@ -52,28 +52,7 @@
   {% assign announcement_home = true %}
 {% endif %}
 
-{% if section.settings.show_announcement and section.settings.announcement_text != blank and announcement_home %}
-  <nav
-    class="site-announcement"
-    style="
-      --text-color: {{ section.settings.promo_text_color }};
-      --background-color: {{ section.settings.promo_bg_color }};
-    "
-    aria-label="{{ 'general.accessibility.announcement' | t }}"
-    data-site-announcement
-  >
-    {% if section.settings.announcement_link %}
-      <a
-        href="{{ section.settings.announcement_link }}"
-        class="site-announcement__link"
-      >
-        {{ section.settings.announcement_text | escape }}
-      </a>
-    {% else %}
-      <p class="site-announcement__text">{{ section.settings.announcement_text | escape }}</p>
-    {% endif %}
-  </nav>
-{% endif %}
+
 
 {% if section.settings.social_icons_enabled or section.settings.show_currency_selector or section.settings.show_locale_selector %}
   <nav class="site-header-utility" aria-label="{{ 'general.accessibility.utility_menu' | t }}" data-header-utility>

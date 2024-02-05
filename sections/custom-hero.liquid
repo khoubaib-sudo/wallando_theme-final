@@ -6,9 +6,8 @@
 
 <img
   class="bg-image"
-  src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/bg-1.svg?v=1706527339" 
-  alt="bg-image"
->
+  src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/bg-1.svg?v=1706527339"
+  alt="bg-image">
 
 <div class="max-container max-hero-container">
   <div class="hero-container">
@@ -20,24 +19,27 @@
 
         <div class="subtitle-container">
           <h4>
-            Wenn du keine Lust mehr auf den tristen Blick in deinem <strong>Bad</strong> oder deiner
-            <strong>Küche</strong> hast, sind unsere Wandverkleidungen die Lösung.
+            Wenn du keine Lust mehr auf den tristen Blick in deinem
+            <strong>Bad</strong>
+            oder deiner
+            <strong>Küche</strong>
+            hast, sind unsere Wandverkleidungen die Lösung.
           </h4>
         </div>
 
-        <a style="color:white" class="btn btn-main custom-btn" href="/collections/alle-wandverkleidungen-wallando">
+        <a
+          style="color:white"
+          class="btn btn-main custom-btn"
+          href="/collections/alle-wandverkleidungen-wallando">
           Jetzt zu den Wandverkleidungen
         </a>
-
-        <div class="info-container first-bottom-container">
+        <div class="info-container">
           {% include 'check-svg' %}
-
           <p class="info">Höchste Qualität und 10 Jahre Garantie</p>
         </div>
 
         <div class="info-container">
           {% include 'check-svg' %}
-
           <p class="info">Keine lösenden Ecken oder Kanten</p>
         </div>
       {% elsif shop.locale == 'fr' %}
@@ -47,16 +49,19 @@
 
         <div class="subtitle-container">
           <h4>
-            Envie de rénover votre salle de bain ou votre cuisine? Nos revêtements muraux, à la fois esthétiques et
+            Envie de rénover votre salle de bain ou votre cuisine? Nos revêtements muraux, à la fois esthétiques et  
             pratiques, sont la solution idéale!
           </h4>
         </div>
 
-        <a style="color:white" class="btn btn-main custom-btn" href="/fr-fr/collections/tous-les-revetements-muraux">
+        <a
+          style="color:white"
+          class="btn btn-main custom-btn"
+          href="/fr-fr/collections/tous-les-revetements-muraux">
           Continuer vers les revêtements muraux
         </a>
 
-        <div class="info-container first-bottom-container">
+        <div class="info-container">
           {% include 'check-svg' %}
 
           <p class="info">Qualité supérieure et garantie de 10 ans</p>
@@ -69,13 +74,12 @@
         </div>
       {% endif %}
 
-      <a href="https://www.provenexpert.com/ah-kunststoffe-gmbh/" style="color: #000;">
+      {% comment %} <a href="https://www.provenexpert.com/ah-kunststoffe-gmbh/" style="color: #000;">
         <div class="review-container">
           <img
             class="review-container-img"
             src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/ProvenExpert-Bewertungssiegel-round.png?v=1634832287"
-            alt=""
-          >
+            alt="">
           {% include 'star-svg' %}
           {% include 'star-svg' %}
           {% include 'star-svg' %}
@@ -83,38 +87,24 @@
           {% include 'star-svg' %}
           <p class="info">9800+ Reviews</p>
         </div>
-      </a>
+      </a> {% endcomment %}
     </div>
     <div class="right-fold">
       <div class="main-image">
         {%- if imageSmall != blank -%}
-          {% assign alt = imageSmall.alt %}
-          {% assign crop = crop | default: 'center' %}
-
-          {% render 'rimg', img: imageSmall, alt: alt, size: '1500x', lazy: false, crop: crop %}
+          <img
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/ezgif.com-animated-gif-maker_1.gif?v=1707125301"
+            alt="wallando hero image"
+            width="389"
+            height="583">
         {%- endif -%}
-
-        <div class="main-image-gif-container">
-          <video class="main-image-gif" width="320" height="240" autoplay loop muted>
-            <source
-              src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/Video-Design-Wallando.mp4?v=1634810524"
-              autoplay
-              loop
-              type="video/mp4"
-            >
-          </video>
-          {% if shop.locale == 'de' %}
-            <p class="hide-mobile">Alle bei uns erhätlichen Muster</p>
-          {% elsif shop.locale == 'fr' %}
-            <p class="hide-mobile">Tous les échantillons disponibles chez nous</p>
-          {% endif %}
-        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-{% schema %}
+
+    </div>
+
+  </div>
+</div></div>{% schema %}
 {
   "name": "Custom Hero",
   "settings": [
@@ -122,13 +112,11 @@
       "type": "image_picker",
       "id": "image_logo",
       "label": "Image Logo"
-    },
-    {
+    }, {
       "type": "image_picker",
       "id": "image_small",
       "label": "Small Image"
-    },
-    {
+    }, {
       "type": "image_picker",
       "id": "image_big",
       "label": "Big Image"
@@ -141,10 +129,5 @@
       "settings": {}
     }
   ],
-  "templates": [
-    "index",
-    "product",
-    "page"
-  ]
-}
-{% endschema %}
+  "templates": ["index", "product", "page"]
+}{% endschema %}
