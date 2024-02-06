@@ -422,9 +422,7 @@ border: 1px solid #6e9277;
 border-radius: 5px;
 }
 
-.hide-mobile-cart {
-display: none;
-}
+
 
 .line-item-property__field {
 margin-bottom: .5rem;
@@ -515,10 +513,6 @@ margin-left: 50px;
 .cart-drawer__items {
 max-height: none;
 overflow: initial;
-}
-
-.hide-mobile-cart {
-display: inline-block;
 }
 
 .custom-line-items-wrapper p {
