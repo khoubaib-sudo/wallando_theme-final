@@ -17,6 +17,31 @@
 {% if sidebar_enabled == blank %}
   {%- assign sidebar_enabled = false -%}
 {% endif %}
+<style>
+.price-container__price {
+  margin-bottom: 0;
+  font-size: 1.375rem;
+}
+
+@keyframes priceChangeAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+}
+
+.price-change-highlight {
+  animation: priceChangeAnimation 1s ease-out;
+}
+</style>
 
 <div
   class="
@@ -88,7 +113,7 @@
     "
     data-product-details
   >
-    {% comment %} <div class="kunden-image">
+    <div class="kunden-image">
       <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Group_627.png?v=1663689839" alt="">
 
       {% if shop.locale == 'de' %}
@@ -96,7 +121,7 @@
       {% elsif shop.locale == 'fr' %}
         <p><strong>Plus de 10.000+</strong> clients heureux</p>
       {% endif %}
-    </div> {% endcomment %}
+    </div> 
 
     {% for block in section.blocks %}
       <div
@@ -247,38 +272,34 @@
               data-unavailable="{% if selected_variant == false %}true{% else %}false{% endif %}"
             >
               {% unless collection_handles contains 'coming-soon' %}
-                <p class="price-container__price">
-                  {% if onboarding %}
-                    <span class="price-container__price">$49.00</span>
-                  {% else %}
-                    <span content="{{ selected_variant.price | money_without_currency | remove: ',' }}">
-                      <span
-                        class="price-container__price"
-                        data-product-price
-                        data-selected-variant="{% if product or selected_variant %}true{% else %}false{% endif %}"
-                      >
-                        {% if selected_variant.price > 0 %}
-                          <span class="money">
-                            {% render 'price-element', price: selected_variant.price %}
-                          </span>
-                        {% elsif product.price > 0 %}
-                          <span class="money">
-                            {% render 'price-element', price: product.price %}
-                          </span>
-                        {% else %}
-                          {{ settings.free_price_text }}
-                        {% endif %}
-                      </span>
-                    </span>
-                  {% endif %}
-                  <span class="product__compare-price" data-product-price-compare>
-                    {% if selected_variant.price < selected_variant.compare_at_price and selected_variant.available %}
-                      <span class="money">
-                        {% render 'price-element', price: selected_variant.compare_at_price %}
-                      </span>
-                    {% endif %}
-                  </span>
-                </p>
+                <p class="price-container">
+  {% if onboarding %}
+    <span class="price-container__price">$49.00</span>
+  {% else %}
+    <span class="price-container__price">
+      {% if selected_variant.price > 0 %}
+        <span class="money" data-product-price="{{ selected_variant.id }}" data-selected-variant="{% if product or selected_variant %}true{% else %}false{% endif %}">
+          {% render 'price-element', price: selected_variant.price %}
+        </span>
+      {% elsif product.price > 0 %}
+        <span class="money" data-product-price="{{ product.id }}">
+          {% render 'price-element', price: product.price %}
+        </span>
+      {% else %}
+        {{ settings.free_price_text }}
+      {% endif %}
+    </span>
+  {% endif %}
+  
+  {% if selected_variant.price < selected_variant.compare_at_price and selected_variant.available %}
+    <span class="product__compare-price">
+      <span class="money" data-product-price-compare="{{ selected_variant.id }}">
+        {% render 'price-element', price: selected_variant.compare_at_price %}
+      </span>
+    </span>
+  {% endif %}
+</p>
+
                 {% capture total_quantity %}<span data-total-quantity>{{ selected_variant.unit_price_measurement.quantity_value }}{{ selected_variant.unit_price_measurement.quantity_unit }}</span>{% endcapture %}
                 {% capture unit_price %}<span data-unit-price-amount>{{ selected_variant.unit_price | money }}</span>{% endcapture %}
                 {% capture unit_measure %}<span data-unit-price-measure>{%- if selected_variant.unit_price_measurement.reference_value != 1 -%}{{ selected_variant.unit_price_measurement.reference_value }}{%- endif %}{{ selected_variant.unit_price_measurement.reference_unit }}</span>{% endcapture %}
@@ -310,16 +331,16 @@
                   {{ 'collections.general.coming_soon' | t }}
                 </p>
               {% endif %}
-
-              {% if shop.locale == 'de' %}
-                <p class="tax-notice">inkl. Steuern & kostenlosen Versand</p>
-              {% elsif shop.locale == 'fr' %}
-                <p class="tax-notice">Taxes & livraison gratuite inclus</p>
-              {% endif %}
+              
+              
 
               <form data-payment-terms-target style="display: none;"></form>
             </div>
-
+            {% if shop.locale == 'de' %}
+              <p class="tax-notice">inkl. Steuern & kostenlosen Versand</p>
+            {% elsif shop.locale == 'fr' %}
+              <p class="tax-notice">Taxes & livraison gratuite inclus</p>
+            {% endif %}
           {% when 'form' %}
             <p data-variant-error-message>{{ 'product.variants.error_message' | t }}</p>
 
@@ -547,6 +568,35 @@
       });
   }
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Select the element that contains the price
+  var priceElement = document.querySelector('.price-container__price');
+
+  if (priceElement) {
+    // Create a new MutationObserver instance
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' || mutation.type === 'characterData') {
+          applyAnimation(priceElement);
+        }
+      });
+    });
+
+    // Start observing the priceElement for changes in its child elements or text
+    observer.observe(priceElement, { childList: true, subtree: true, characterData: true });
+  }
+
+  // Function to apply the animation
+  function applyAnimation(element) {
+    element.classList.add('price-change-highlight');
+    setTimeout(function() {
+      element.classList.remove('price-change-highlight');
+    }, 1000); // Duration should match the CSS animation
+  }
+});
+</script>
+
 
 {% if product.description != blank %}
   <script>

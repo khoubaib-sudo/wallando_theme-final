@@ -1,3 +1,5 @@
+
+
 {
   "product": {
     "variants": {
@@ -228,7 +230,7 @@
       "sold_out": "Ausverkauft",
       "unavailable": "Nicht verfügbar",
       "quantity": "Anzahl",
-      "add_to_cart": "In den Warenkorb",
+      "add_to_cart": "In den Einkaufswagen",
       "add_to_cart_success": "Erfolg",
       "vendor": "Händler",
       "related_items": "Verwandte Artikel",

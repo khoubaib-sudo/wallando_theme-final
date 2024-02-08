@@ -1,3 +1,5 @@
+
+
 @charset "UTF-8";
 /* Normalize */
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
@@ -2786,13 +2788,13 @@ a.sidebar__blog-tag:focus {
   font-weight: 400;
   display: inline-block;
   line-height: 1.4;
-  color: #ffffff;
+  color: #000000;
   text-decoration: none;
   text-transform: none;
   letter-spacing: 0px;
   cursor: pointer;
-  background-color: #1c395a;
-  border: 1px solid #1c395a;
+  background-color: #ffd602;
+  border: 1px solid #ffd602;
   border-radius: 0;
   outline: none;
   transition: border-color 0.2s ease-out, background-color 0.2s ease-out,
@@ -2810,8 +2812,8 @@ a.sidebar__blog-tag:focus {
 .product__add-to-cart-button:focus,
 .product__add-to-cart-button:active {
   color: #ffffff;
-  background-color: #305074;
-  border: 1px solid #305074;
+  background-color: #ffd602;
+  border: 1px solid #ffd602;
   box-shadow: 0 4px 16px 1px rgba(0, 0, 0, 0.25);
 }
 .product__add-to-cart-button:disabled,
@@ -3116,9 +3118,66 @@ a.sidebar__blog-tag:focus {
 }
 
 .price-container__price {
-  margin-bottom: 0;
-  font-size: 1.375rem;
+  font-size: 28px; /* Or any other size you prefer */
+  /* You might also want to adjust the weight, style, etc. */
+  font-weight: bold; /* Example for making the price bold */
 }
+.product__compare-price {
+  font-size: 16px; /* Smaller than the main price */
+  text-decoration: line-through;
+  color: #777; /* Example color for the original price that is now discounted */
+}
+.price-and-tax-notice {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-container__price {
+  margin-right: 10px; /* Adjust the space between the price and the text as needed */
+}
+@keyframes priceChangeAnimation {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+.price-change-highlight {
+  animation: priceChangeAnimation 1s ease-out;
+}
+
+.tax-notice {
+  white-space: nowrap; /* Prevents the text from wrapping */
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  margin-top: 8px; /* Adjust spacing as needed */
+}
+
+.star-rating {
+  /* Add styles for your stars here */
+  /* This is just an example, you would replace it with the actual path to your star icon */
+  background: url('https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Yellow_star.svg?v=1707254385') repeat-x;
+  width: 120px; /* Adjust size as needed */
+  height: 20px; /* Adjust size as needed */
+}
+
+.full-star {
+  /* Style for full star (You might use a background image or a font icon) */
+  display: inline-block;
+  width: 20px; /* Adjust width to match your star icon's width */
+  height: 20px; /* Adjust height to match your star icon's height */
+  background: url('https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Yellow_star.svg?v=1707254385') no-repeat center;
+  background-size: cover; /* Resize icon to fit the container */
+}
+
+.review-count {
+  margin-left: 4px; /* Adjust spacing as needed */
+  color: #333; /* Color for the review count text */
+  font-size: 14px; /* Adjust font size as needed */
+}
+
 
 .product__compare-price {
   font-weight: normal;
@@ -3308,39 +3367,56 @@ a.sidebar__blog-tag:focus {
   margin-bottom: 0.75rem;
 }
 
+/* Default state of the variant button */
 .options-selection__option-value-name {
   display: block;
   padding: 0.75rem 1rem;
   cursor: pointer;
   border: 1px solid rgba(68, 68, 68, 0.4);
   border-radius: 8px;
+  background-color: green; /* Background color for the button */
+  color: white; /* Text color for the button */
+  transition: background-color 0.3s, color 0.3s, border 0.3s; /* Smooth transition for color changes */
 }
-.options-selection__option-value-input:disabled
-  + .options-selection__option-value-name {
+
+/* Disabled state of the variant button */
+.options-selection__option-value-input:disabled + .options-selection__option-value-name {
   cursor: default;
   background-image: url('data:image/svg+xml,<svg width="44" height="44" viewBox="0 0 100 100" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="100" x2="100" y2="0" stroke-width="5" stroke="%23444444"/></svg>');
   background-size: 100% 100%;
   outline: none;
   opacity: 0.5;
 }
+
+/* Hover state for the button */
+.options-selection__option-value-name:hover {
+  background-color: #005e0c; /* Slightly darker green on hover */
+}
+
+/* Focused state of the variant button */
 .options-selection__option-value-name:focus {
   outline: 0;
 }
 
-.options-selection__option-value:last-child
-  .options-selection__option-value-name {
+/* Last child button margin adjustment */
+.options-selection__option-value:last-child .options-selection__option-value-name {
   margin-right: 0;
 }
 
+/* Hidden input for the variant button */
 .options-selection__option-value-input {
   position: absolute;
   opacity: 0;
 }
-.options-selection__option-value-input:checked
-  + .options-selection__option-value-name {
-  border-color: #00740f;
+
+/* Checked state for the variant button (selected) */
+.options-selection__option-value-input:checked + .options-selection__option-value-name {
+  background-color: white; /* Background color for the selected button */
+  color: green; /* Text color for the selected button */
+  border-color: green; /* Border color for the selected button */
   box-shadow: 0px 0px 30px 2px #00740f0f;
 }
+
 .options-selection__option-value-input:checked
   + .options-selection__option-swatch-wrapper
   .options-selection__option-swatch {
@@ -20272,13 +20348,13 @@ p.availability_text {
   height: var(--size);
   width: var(--size);
   float: left;
-  border: 1px solid #3d3d3d;
+  border: 2px solid #025e0d;
   border-radius: 3px;
   transition: 0.15s all ease-out;
 }
 .checkbox-wrapper-28 svg {
-  stroke: #3d3d3d;
-  stroke-width: 1px;
+  stroke: #025e0d;
+  stroke-width: 2px;
   height: 0;
   width: calc(var(--size) * 0.6);
   position: absolute;
