@@ -50,6 +50,7 @@
   "
   data-product-url="{{ product.url }}"
 >
+
   <div class="product-gallery__wrapper">
     {% render 'product-images',
       product: product,
@@ -73,12 +74,14 @@
     {% assign recommended_product = product.metafields.custom.muster.value %}
 
     <div class="custom-muster">
+      
       {% if shop.locale == 'de' %}
         <p class="muster-title">Hier kannst du ein Muster des Produkts für nur 1€ bestellen!</p>
+        
       {% elsif shop.locale == 'fr' %}
         <p class="muster-title">Ici, tu peux commander un échantillon du produit pour seulement 1€ !</p>
       {% endif %}
-
+      
       <div class="muster-image">
         <a href="{{ recommended_product.url }}">
           <img src="{{ recommended_product.featured_image  | image_url: width: 600 }}" alt="zuschneiden image wallando">
@@ -113,7 +116,7 @@
     "
     data-product-details
   >
-    <div class="kunden-image">
+    {% comment %} <div class="kunden-image">
       <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Group_627.png?v=1663689839" alt="">
 
       {% if shop.locale == 'de' %}
@@ -121,7 +124,7 @@
       {% elsif shop.locale == 'fr' %}
         <p><strong>Plus de 10.000+</strong> clients heureux</p>
       {% endif %}
-    </div> 
+    </div>  {% endcomment %}
 
     {% for block in section.blocks %}
       <div
@@ -336,11 +339,21 @@
 
               <form data-payment-terms-target style="display: none;"></form>
             </div>
+            
             {% if shop.locale == 'de' %}
-              <p class="tax-notice">inkl. Steuern & kostenlosen Versand</p>
+              <div class="flex-container">
+                
+                <p class="tax-notice">inkl. Steuern & kostenlosen Versand</p>
+                <div class="ruk_rating_snippet" data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"></div>
+              </div>
             {% elsif shop.locale == 'fr' %}
-              <p class="tax-notice">Taxes & livraison gratuite inclus</p>
+              <div class="flex-container">
+                
+                <p class="tax-notice">Taxes & livraison gratuite inclus</p>
+                <div class="ruk_rating_snippet" data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"></div>
+              </div>
             {% endif %}
+            
           {% when 'form' %}
             <p data-variant-error-message>{{ 'product.variants.error_message' | t }}</p>
 
@@ -410,87 +423,9 @@
     {% endif %}
   </div>
 
-  <div class="image-benefits">
-    <div>
-      <img
-        src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/Abweisend_2_1.png?v=1662724583"
-        class="image-benefits__image"
-        alt=""
-      >
+  
 
-      {% if shop.locale == 'de' %}
-        <p>Wasserabweichende Oberfläche</p>
-      {% elsif shop.locale == 'fr' %}
-        <p>Surface déviant l'eau</p>
-      {% endif %}
-    </div>
-    <div>
-      <img
-        src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/Abweisend_2_2.png?v=1662724583"
-        class="image-benefits__image"
-        alt=""
-      >
-
-      {% if shop.locale == 'de' %}
-        <p>Einfach zum zuschneiden</p>
-      {% elsif shop.locale == 'fr' %}
-        <p>Simple à découper</p>
-      {% endif %}
-    </div>
-    <picture style="width: 100%; height: 100%">
-      <source
-        media="(min-width:650px)"
-        srcset="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Proven_Expert_Badge_4.png?v=1665391631"
-      >
-      <source
-        media="(min-width:465px)"
-        srcset="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Proven_Expert_Badge_4.png?v=1665391631"
-      >
-      <img
-        src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Proven_Expert_Badge_4.png?v=1665391631"
-        alt="desktop"
-        style="width: 100%;"
-        loading="lazy"
-      >
-    </picture>
-  </div>
-
-  {% if product.description != blank %}
-    <div class="custom-accordion">
-      <div class="custom-accordion__header">
-        {% if shop.locale == 'de' %}
-          <p class="p-product">Produktdetails zur Wandverkleidung</p>
-        {% elsif shop.locale == 'fr' %}
-          <p class="p-product">Détails du produit pour l'habillage mural</p>
-        {% endif %}
-        <span class="p-product product-options-update"> </span>
-      </div>
-      <div class="custom-accordion__body">
-        <div class="custom-accordion__inner">
-          <div class="custom-accordion__text">
-            <div class="custom-product-description">
-              {% if onboarding %}
-                {{ 'homepage.onboarding.product_description' | t }}
-              {% elsif product.description != blank %}
-                <div class="product__description ">
-                  {% if template == 'product-quickshop' and block.settings.description_words != 'none' %}
-                    {{
-                      product.description
-                      | split: '<!-- split -->'
-                      | first
-                      | truncatewords: block.settings.description_words
-                    }}
-                  {% else %}
-                    {{ product.description }}
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
+  
 </div>
 
 {% if template != 'featured-product' %}
@@ -597,6 +532,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script src="https://widget.reviews.io/rating-snippet/dist.js"></script>
+<link rel="stylesheet" href="https://widget.reviews.io/rating-snippet/dist.css"/>
+<script>
+ratingSnippet("ruk_rating_snippet", {
+  store: "www.wallando.de",
+  mode: "default",
+  color: "#FFDF00" ,
+  linebreak: false,
+  text: "Reviews",
+  singularText: "Review",
+  lang: "de",
+  usePolaris: true,
+  showEmptyStars: false,
+});
+</script>
 
 {% if product.description != blank %}
   <script>
