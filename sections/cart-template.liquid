@@ -31,23 +31,23 @@
         <div class="cart-item cart-item--titles">
           <div class="cart-item__info">{{ 'cart.general.products' | t }}</div>
           <div class="cart-item__price">
-            <p>{{ 'cart.general.price' | t }}</p>
+            {{ 'cart.general.price' | t }}
           </div>
           <div class="cart-item__quantity">
-            <p>{{ 'cart.general.quantity' | t }}</p>
+            {{ 'cart.general.quantity' | t }}
           </div>
           <div class="cart-item__total">
-            <p>{{ 'cart.general.total' | t }}</p>
+            {{ 'cart.general.total' | t }}
           </div>
         </div>
         {% for item in cart.items %}
           <div class="cart-item">
             <div class="cart-item__info">
               <a class="cart-item__image-link" href="{{ item.url }}">
-                {% render 'rimg', img: item.image, size: '1024x', lazy: true, canvas: true, class: 'cart-item__image' %}
+                {% render 'rimg', img: item.image, lazy: true, canvas: true, class: 'cart-item__image' %}
               </a>
               <div class="cart-info">
-                <h2>{{ item.product.title }}</h2>
+                <p class="cart-item__title-text">{{ item.product.title }}</p>
 
                 {% unless item.product.has_only_default_variant or item.variant.title contains 'Title' %}
                   <p>
@@ -155,7 +155,7 @@
                   <p>{{ item.product.title }}</p>
 
                   <!-- this added by khoubaieb < -->
-                  <span class="line-item__cart-text1">
+                  {% comment %} <span class="line-item__cart-text1">
                     {% assign property_size = item.properties | size %}
                     {%- if property_size > 0 -%}
                       {%- for p in item.properties -%}
@@ -172,10 +172,10 @@
                         {%- endunless -%}
                       {%- endfor -%}
                     {%- endif -%}
-                  </span>
+                  </span> {% endcomment %}
                   <!-- > this added by khoubaieb -->
 
-                  {% comment %}
+                  
                     {% unless item.product.has_only_default_variant or item.variant.title contains 'Title' %}
                       <p class="cart-item__variants">
                         {% for option in item.product.options %}
@@ -186,7 +186,7 @@
                         {% endfor %}
                       </p>
                     {% endunless %}
-                  {% endcomment %}
+                  
 
                   {% if item.selling_plan_allocation.selling_plan %}
                     <p class="cart-item__selling-plan">{{ item.selling_plan_allocation.selling_plan.name }}</p>
@@ -358,6 +358,9 @@
           </div>
         {% endfor %}
       </div>
+      
+      
+      
       <div class="cart-template__subtotal">
         <div class="cart-template__notes">
           {% if section.settings.display_special_instructions %}
@@ -386,9 +389,9 @@
             </ul>
           {% endif %}
 
-          <p class="cart-template__order-subtotal">
+          {% comment %} <p class="cart-template__order-subtotal">
             {{ 'cart.general.subtotal' | t }}
-          </p>
+          </p> {% endcomment %}
 
           <p class="cart-template__cart-total">
             <span class="money">{{ cart.total_price | money_with_currency }}</span>
@@ -415,6 +418,9 @@
               </label>
             </div>
           {% endif %}
+          
+          
+          <p class="cart-benefit-notice-phrase">● Auf Lager - in 2-3 Werktagen bei dir</p>
 
           <div class="cart-template__checkout-buttons">
             <noscript class="cart-update-noscript">
@@ -434,12 +440,43 @@
               name="checkout"
               value="{{ 'cart.general.checkout' | t }}"
             >
-            {% if content_for_additional_checkout_buttons %}
-              <div class="additional-checkout-buttons additional-checkout-buttons--vertical">
-                {{ content_for_additional_checkout_buttons }}
-              </div>
-            {% endif %}
+            
           </div>
+          <div class="cart-benefit" >
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/10Jahre_Garantie_outline_300x300_d22d67b8-1471-4d4f-8305-7569018cfba5.png?v=1707868007"
+            alt="Warranty Icon"
+          >
+        </div>
+        <div class="cart-item">
+          <img
+            alt="DHL Logo"
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/DHL-Logo.svg?v=1707128526"
+          >
+        </div>
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Klarna_marketing_badge_pink_rgb_svg.svg?v=1707830753"
+            alt="Klarna Logo"
+            width="100" 
+            height="50"
+          >
+          
+        </div>
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/paypal-3.svg?v=1707831249"
+            alt="PayPal Logo"
+            width="100" 
+            height="50"
+          >
+        </div>
+</div>
         </div>
       </div>
     </form>

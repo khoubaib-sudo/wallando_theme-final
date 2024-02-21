@@ -344,13 +344,22 @@
               <div class="flex-container">
                 
                 <p class="tax-notice">inkl. Steuern & kostenlosen Versand</p>
-                <div class="ruk_rating_snippet" data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"></div>
+                <div class="reviews-io-rating-bar-widget"
+  widget-id="QSd2LbPi7EpsmI8F"
+ data-store-name="www.wallando.de"
+ lang="de"
+ ></div>
+
               </div>
             {% elsif shop.locale == 'fr' %}
               <div class="flex-container">
                 
                 <p class="tax-notice">Taxes & livraison gratuite inclus</p>
-                <div class="ruk_rating_snippet" data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"></div>
+                <div class="reviews-io-rating-bar-widget"
+  widget-id="QSd2LbPi7EpsmI8F"
+ data-store-name="www.wallando.de"
+ lang="de"
+ ></div>
               </div>
             {% endif %}
             
@@ -532,21 +541,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script src="https://widget.reviews.io/rating-snippet/dist.js"></script>
-<link rel="stylesheet" href="https://widget.reviews.io/rating-snippet/dist.css"/>
-<script>
-ratingSnippet("ruk_rating_snippet", {
-  store: "www.wallando.de",
-  mode: "default",
-  color: "#FFDF00" ,
-  linebreak: false,
-  text: "Reviews",
-  singularText: "Review",
-  lang: "de",
-  usePolaris: true,
-  showEmptyStars: false,
-});
-</script>
+<script src="//widget.reviews.io/modern-widgets/rating-bar.js" async></script>
+
 
 {% if product.description != blank %}
   <script>

@@ -14,20 +14,6 @@
 
 <div class="product-form">
   {% form 'product', product, class: 'product_form_classes', data-product-form: '' %}
-    {% comment %}
-      Display variant options for a product
-
-      @param product
-      @param selected_variant
-      @param style
-
-      @param enable_swatches
-      @param swatches_shape
-      @param swatches_option_trigger
-      @param swatches_option_style
-      @param swatches_product_page_size
-      @param swatch_custom_colors
-    {% endcomment %}
     {% assign product = product %}
     {% assign selected_variant = product.selected_variant %}
     {% if product.variants.size == 1 or settings.select_first_available_variant %}
@@ -95,24 +81,6 @@
       {% endif %}
     {% endfor %}
 
-    {% comment %}Inject @pixelunion/shopify-variants-ui/variant-selection begin{% endcomment %}
-    {% comment %}
-      Display variant options for a product
-
-      @param product
-      @param selected_variant
-      @param variant_selection_id
-      @param sold_out_options
-      @param style
-
-      @param enable_swatches
-      @param swatches_shape
-      @param swatches_option_trigger
-      @param swatches_option_style
-      @param swatches_product_page_size
-      @param swatches_custom_colors
-    {% endcomment %}
-
     <variant-selection
       {% if variant_selection_id != blank %}
         id="{{ variant_selection_id }}"
@@ -167,25 +135,6 @@
             </option>
           {% endfor %}
         </select>
-
-        {% comment %}Inject @pixelunion/shopify-variants-ui/options-selection begin{% endcomment %}
-        {% comment %}
-          Display variant options for a product
-
-          @param product
-          @param selected_variant
-          @param variant_selection_id
-          @param sold_out_options
-          @param style
-
-          @param enable_swatches
-          @param swatches_shape
-          @param swatches_option_trigger
-          @param swatches_option_style
-          @param swatches_product_page_size
-          @param swatches_custom_colors
-          @param swatch_file_type
-        {% endcomment %}
 
         <options-selection
           {% if variant_selection_id != blank %}
@@ -245,10 +194,8 @@
             {% endif %}
           {% endfor %}
         </options-selection>
-        {% comment %}Inject @pixelunion/shopify-variants-ui/options-selection end{% endcomment %}
       {% endif %}
     </variant-selection>
-    {% comment %}Inject @pixelunion/shopify-variants-ui/variant-selection end{% endcomment %}
 
     {% if settings.display_product_quantity %}
       <div
@@ -354,9 +301,7 @@
 
       {% if section.settings['extra-product'] != blank and display_checkbox %}
         <div class="extra-product-container">
-          <!-- ... existing checkbox code ... -->
-          {% if section.settings['extra-product'] != blank %}
-            <div class="extra-product-container">
+          
               <div class="checkbox-wrapper-28">
                 <input
                   id="tmp-28"
@@ -414,8 +359,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          {% endif %}
         </div>
       {% endif %}
 
@@ -465,112 +408,115 @@
       </div>
 
       <div class="cart-benefit">
-        <img
-          alt="Delivered to your doorstep in no time. icon"
-          class="icon"
-          src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/DHL-Logo.svg?v=1707128526"
-          width="100" 
-          height="50"
-        >
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/10Jahre_Garantie_outline_300x300_d22d67b8-1471-4d4f-8305-7569018cfba5.png?v=1707868007"
+            alt="Warranty Icon"
+          >
+        </div>
+        <div class="cart-item">
+          <img
+            alt="DHL Logo"
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/DHL-Logo.svg?v=1707128526"
+          >
+        </div>
 
-        {% if shop.locale == 'de' %}
-          <span>In 2-3 Werktagen bei dir Mit DHL</span>
-        {% elsif shop.locale == 'fr' %}
-          <span>Avec DHL en 2-3 jours ouvrables</span>
-        {% endif %}
-        <img
-          class="icon"
-          src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/2560px-Klarna_Payment_Badge_2.png?v=1662719318"
-          alt="Delivered to your doorstep in no time. icon"
-        >
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/Klarna_marketing_badge_pink_rgb_svg.svg?v=1707830753"
+            alt="Klarna Logo"
+            width="100"
+            height="50"
+          >
+        </div>
 
-        {% if shop.locale == 'de' %}
-          <span>Kauf auf Rechnung & bezahle nach 30 Tagen.</span>
-        {% elsif shop.locale == 'fr' %}
-          <span>Acheter sur facture & payer après 30 jours.</span>
-        {% endif %}
-
-        <img
-          class="icon"
-          src="https://cdn.shopify.com/s/files/1/0602/9567/6163/files/loss_8.png?v=1662719319"
-          alt="Delivered to your doorstep in no time. icon"
-        >
-
-        {% if shop.locale == 'de' %}
-          <span>10 Jahre Garantie & Made in Germany.</span>
-        {% elsif shop.locale == 'fr' %}
-          <span>10 ans de garantie & Livraison rapide.</span>
-        {% endif %}
+        <!-- Adding the PayPal logo -->
+        <div class="cart-item">
+          <img
+            class="icon"
+            src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/paypal-3.svg?v=1707831249"
+            alt="PayPal Logo"
+            width="100"
+            height="50"
+          >
+        </div>
       </div>
 
-      {% if product.has_only_default_variant == false and hasCustomZuschneiden == true %}
-        <div class="zuschneiden-container">
-          <div class="zuschneiden-image__wrapper">
-            <img
-              src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/icons8-cut-64_1.png?v=1672140718"
-              alt="zuschneiden image wallando"
-            >
-          </div>
-          <div class="zuschneiden-text__wrapper">
-            {% if shop.locale == 'de' %}
-              <button class="zusschneiden-titel" onclick="event.preventDefault(); openModal(event, true);">
-                Hier klicken um individuelle Maße anzugeben
-              </button>
-            {% elsif shop.locale == 'fr' %}
-              <button class="zusschneiden-titel" onclick="event.preventDefault(); openModal(event, true);">
-                Cliquez ici pour indiquer les dimensions individuelles
-              </button>
-            {% endif %}
-
-            {% if shop.locale == 'de' %}
-              <p class="zuschneiden-subtitle">
-                Kostenlos und perfekt nach deinen Maßen und Vorgaben, auf den Millimeter genau zugeschnitten
-              </p>
-            {% elsif shop.locale == 'fr' %}
-              <p class="zuschneiden-subtitle">
-                Gratuit et parfaitement découpé selon tes mesures et tes spécifications, au millimètre près.
-              </p>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-
       {% if shop.locale == 'de' %}
-        <div class="shipping-benefit">
-          <span>
-            <strong> Kosten- und nervenfreier Versand: </strong>
-            <br>
-            Die Wandverkleidungen werden in gerolltem Zustand verschickt und nehmen nach dem Auspacken ihre
-            Ursprungsform wieder an.
-          </span>
+        <div class="accordion-container">
+          <button class="accordion" type="button">
+            <strong>Kosten- und nervenfreier Versand</strong>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="panel">
+            <p>
+              Die Wandverkleidungen werden in gerolltem Zustand verschickt und nehmen nach dem Auspacken ihre
+              Ursprungsform wieder an.
+            </p>
+          </div>
         </div>
       {% elsif shop.locale == 'fr' %}
-        <div class="shipping-benefit">
-          <span>
-            <strong> Envoi sans frais ni tracas: </strong>
-            <br>
-            Les revêtements muraux sont envoyés à l'état roulé et reprennent leur forme initiale après déballage. Ils
-            reprennent leur forme initiale.
-          </span>
+        <div class="accordion-container">
+          <button class="accordion" type="button">
+            <strong>Envoi sans frais ni tracas</strong>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="panel">
+            <p>Les revêtements muraux sont envoyés à l'état roulé et reprennent leur forme initiale après déballage.</p>
+          </div>
         </div>
       {% endif %}
 
-      {% comment %}
-        <div class="custom-line-item-field">
-        <p class="headline-item-field"> Brauchst du inviduelle Maße? </p>
-        <p class="line-item-property__field">
-        <p>Trage hier genaue Maße ein, damit wir deine Wandverkleidung perfekt für dich zuschneiden können:</p>
-        <label for="Höhe ">Höhe (in cm)</label>
-        <p class="size-values" style="margin-bottom: 10px;">Maximal <span class="hohe-value"></span>cm möglich</p>
-        <input id="Höhe" type="text" name="properties[Höhe]">
-        <label for="Breite">Breite (in cm)</label><p class="size-values" style="margin-bottom: 10px;">Maximal <span class="breite-value"></span>cm möglich</p>
-        <input id="Breite" type="text" name="properties[Breite]">
-
-        <p>Bitte beachte, dass die Preise bei jeglicher Größe gleich bleiben und die angegeben Maße erst im Checkout ersichtlich sind!</p>
-
-        </p>
+      <script>
+              // Simple accordion functionality
+              document.addEventListener('DOMContentLoaded', function() {
+          var acc = document.getElementsByClassName("accordion");
+          for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+              this.classList.toggle("active");
+              var icon = this.querySelector('.accordion-icon'); // Target the span specifically
+              icon.textContent = icon.textContent === "+" ? "−" : "+";
+              var panel = this.nextElementSibling;
+              if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+              } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+              }
+            });
+          }
+        });
+      </script>
+      {% if product.description != blank %}
+        <div class="accordion-container">
+          <button class="accordion" type="button">
+            {% if shop.locale == 'de' %}
+              <p>Produktdetails zur Wandverkleidung</p>
+            {% elsif shop.locale == 'fr' %}
+              <p>Détails du produit pour l'habillage mural</p>
+            {% endif %}
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="panel">
+            <div class="custom-accordion__inner">
+              <div class="custom-accordion__text">
+                <div class="custom-product-description">
+                  <!-- Product description content -->
+                  {% if onboarding %}
+                    {{ 'homepage.onboarding.product_description' | t }}
+                  {% else %}
+                    <div class="product__description">
+                      {{ product.description }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      {% endcomment %}
+      {% endif %}
 
       <div
         class="surface-pick-up {% unless product.available %}surface-pick-up--hidden{% endunless %}"
@@ -732,7 +678,7 @@
 // enable atc and change it´s text
       AtcBtn.disabled = false;
       if(!localeIsFR) {
-      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Einkaufswagen</span>`
       } else {
         AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
       }
@@ -752,7 +698,7 @@
 // enable atc and change it´s text
       AtcBtn.disabled = false;
       if(!localeIsFR) {
-      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+      AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Einkaufswagen</span>`
       } else {
         AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
       }
@@ -844,7 +790,7 @@
               document.querySelector(".custom-line-items-wrapper").classList.add("active");
               AtcBtn.disabled = false;
               if(!localeIsFR) {
-              AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Warenkorb</span>`
+              AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">In den Einkaufswagen</span>`
               } else {
                 AtcBtn.innerHTML = `<span class="text" data-product-atc-text="">Ajouter au panier</span>`
               }
@@ -873,6 +819,13 @@
      
 
   }
+  
+window.addEventListener('load', function() {
+  var extraProductContainer = document.querySelector('.extra-product-container');
+  if (extraProductContainer) {
+    extraProductContainer.style.display = 'flex !important';
+  }
+});
 
 // Change sticky ATC language
 
