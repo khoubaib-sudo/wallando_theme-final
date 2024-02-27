@@ -2,7 +2,7 @@
   | split: ','
 %}
 {% assign current_product_id = product.id | plus: 0 %}
-
+{% assign description_parts = product.description | split: '<!--split-->' %}
 {% assign display_checkbox = true %}
 {% for excluded_id in excluded_product_ids %}
   {% assign excluded_id_num = excluded_id | plus: 0 %}
@@ -445,78 +445,112 @@
         </div>
       </div>
 
-      {% if shop.locale == 'de' %}
-        <div class="accordion-container">
-          <button class="accordion" type="button">
-            <strong>Kosten- und nervenfreier Versand</strong>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="panel">
-            <p>
-              Die Wandverkleidungen werden in gerolltem Zustand verschickt und nehmen nach dem Auspacken ihre
-              Ursprungsform wieder an.
-            </p>
-          </div>
-        </div>
-      {% elsif shop.locale == 'fr' %}
-        <div class="accordion-container">
-          <button class="accordion" type="button">
-            <strong>Envoi sans frais ni tracas</strong>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="panel">
-            <p>Les revêtements muraux sont envoyés à l'état roulé et reprennent leur forme initiale après déballage.</p>
-          </div>
-        </div>
-      {% endif %}
+      {% assign description_parts = product.description | split: '@@split@@' %}
 
-      <script>
-              // Simple accordion functionality
-              document.addEventListener('DOMContentLoaded', function() {
-          var acc = document.getElementsByClassName("accordion");
-          for (var i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-              this.classList.toggle("active");
-              var icon = this.querySelector('.accordion-icon'); // Target the span specifically
-              icon.textContent = icon.textContent === "+" ? "−" : "+";
-              var panel = this.nextElementSibling;
-              if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-              } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-              }
-            });
-          }
-        });
-      </script>
-      {% if product.description != blank %}
-        <div class="accordion-container">
-          <button class="accordion" type="button">
-            {% if shop.locale == 'de' %}
-              <p>Produktdetails zur Wandverkleidung</p>
-            {% elsif shop.locale == 'fr' %}
-              <p>Détails du produit pour l'habillage mural</p>
-            {% endif %}
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="panel">
-            <div class="custom-accordion__inner">
-              <div class="custom-accordion__text">
-                <div class="custom-product-description">
-                  <!-- Product description content -->
-                  {% if onboarding %}
-                    {{ 'homepage.onboarding.product_description' | t }}
-                  {% else %}
-                    <div class="product__description">
-                      {{ product.description }}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
+{% if shop.locale == 'de' %}
+  <div class="accordion-container">
+    <button class="accordion" type="button">
+      <strong>Kosten- und nervenfreier Versand</strong>
+      <span class="accordion-icon">+</span>
+    </button>
+    <div class="panel">
+      <p>
+        Die Wandverkleidungen werden in gerolltem Zustand verschickt und nehmen nach dem Auspacken ihre
+        Ursprungsform wieder an.
+      </p>
+    </div>
+  </div>
+{% elsif shop.locale == 'fr' %}
+  <div class="accordion-container">
+    <button class="accordion" type="button">
+      <strong>Envoi sans frais ni tracas</strong>
+      <span class="accordion-icon">+</span>
+    </button>
+    <div class="panel">
+      <p>Les revêtements muraux sont envoyés à l'état roulé et reprennent leur forme initiale après déballage.</p>
+    </div>
+  </div>
+{% endif %}
+
+
+
+{% if description_parts.size > 1 %}
+  <!-- Accordion for product description -->
+  <div class="accordion-container">
+    <button class="accordion" type="button">
+      <!-- Locale specific title for product details -->
+      {% if shop.locale == 'de' %}
+        <p>Produktdetails zur Wandverkleidung</p>
+      {% elsif shop.locale == 'fr' %}
+        <p>Détails du produit pour l'habillage mural</p>
       {% endif %}
+      <span class="accordion-icon">+</span>
+    </button>
+    <div class="panel">
+      {{ description_parts[0] | strip_html }}
+    </div>
+  </div>
+
+ <!-- Accordion for Produktinformationen -->
+<div class="accordion-container">
+  <button class="accordion" type="button">
+    <!-- Locale specific title for product information -->
+    {% if shop.locale == 'de' %}
+      <p>Produktinformationen</p>
+    {% elsif shop.locale == 'fr' %}
+      <p>Informations sur le produit</p>
+    {% endif %}
+    <span class="accordion-icon">+</span>
+  </button>
+  <div class="panel">
+    <ul class="product-information-list">
+      {% assign info_items = description_parts[1] | split: '<br>' %}
+      {% for item in info_items %}
+        {% if item.size > 0 %}
+          <li>{{ item | strip_html | strip_newlines }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% else %}
+  <!-- Fallback accordion in case the split delimiter isn't found -->
+  <div class="accordion-container">
+    <button class="accordion" type="button">
+      <!-- Locale specific title for product details -->
+      {% if shop.locale == 'de' %}
+        <p>Produktdetails zur Wandverkleidung</p>
+      {% elsif shop.locale == 'fr' %}
+        <p>Détails du produit pour l'habillage mural</p>
+      {% endif %}
+      <span class="accordion-icon">+</span>
+    </button>
+    <div class="panel">
+      {{ product.description | strip_html }}
+    </div>
+  </div>
+{% endif %}
+<script>
+  // Simple accordion functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    var acc = document.getElementsByClassName("accordion");
+    for (var i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var icon = this.querySelector('.accordion-icon'); // Target the span specifically
+        icon.textContent = icon.textContent === "+" ? "−" : "+";
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+    }
+  });
+</script>
 
       <div
         class="surface-pick-up {% unless product.available %}surface-pick-up--hidden{% endunless %}"

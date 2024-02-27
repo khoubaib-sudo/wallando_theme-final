@@ -19727,6 +19727,14 @@ p.availability_text {
   transition: transform 0.4s ease;
   
 }
+.product-information-list {
+  list-style-type: none; /* Removes the default list-style */
+  padding-left: 0; /* Removes the default padding */
+}
+
+.product-information-list li {
+  margin-bottom: 10px; /* Adds space between list items */
+}
 
 .active .accordion-icon {
   transform: rotate(180deg); /* This is a simple effect to rotate the icon */
