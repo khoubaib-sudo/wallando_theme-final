@@ -62,15 +62,15 @@
 
     
 {% if object.settings.title != blank %}
-<h2 class="center-title">
-    {% if collection != blank %}
-      <a href="{{ collection.url }}">
-    {% endif %}
-      {{ object.settings.title | escape }}
-    {% if collection != blank %}</a>{% endif %}
-  </h2>
-
-{% endif %}
+  <h2 class="center-title">
+      {% if collection != blank %}
+        <a href="{{ collection.url }}">
+      {% endif %}
+        {{ object.settings.title | escape }}
+      {% if collection != blank %}</a>{% endif %}
+    </h2>
+  
+  {% endif %}
 
 {% if object.settings.text != blank %}
   <h5> {{ object.settings.text | escape }}</h5>
@@ -157,9 +157,9 @@
       
         </div>
       {% endif %}
-      <a href="{{ collection.url }}" class="btn btn-main custom-btn featured-collection__view-all">
+      {% comment %} <a href="{{ collection.url }}" class="btn btn-main custom-btn featured-collection__view-all">
         {{ 'collections.general.view_all' | t }}
-      </a>
+      </a> {% endcomment %}
 
     </div>
 

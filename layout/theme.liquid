@@ -116,8 +116,14 @@
       if (window.Shopify && window.Shopify.designMode) document.documentElement.className += ' in-theme-editor';
     </script>
 
-    <!-- Global site tag (gtag.js) - Google Ads: 417828782 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-417828782"></script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-59SZRJNT');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Global site tag (gtag.js) - Google Ads: AW-11439112643 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11439112643"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -125,12 +131,12 @@
       }
       gtag('js', new Date());
 
-      gtag('config', 'AW-417828782');
+      gtag('config', 'AW-11439112643');
     </script>
 
     <script>
       gtag('event', 'page_view', {
-        send_to: 'AW-417828782',
+        send_to: 'AW-11439112643',
         value: 'replace with value',
         items: [
           {
@@ -151,27 +157,26 @@
       gsProductByVariant = {}; {% if product.id > 1 %}{% for variant in product.variants %} gsProductByVariant[{{variant.id}}] = {% if variant.available %} 1 {% else %} 0 {% endif %}; {% endfor %}{% endif %}  gsProductCSID = "{{ product.id }}"; gsDefaultV = "{{ product.selected_or_first_available_variant.id }}";
     </script>
     <script
+      async
       type="text/javascript"
       src="https://gravity-software.com/js/shopify/pac_shop37444.js?v=84d2faae6e19fe9f0021acf0621e56df"
     ></script>
     <!-- Coming Soon code end. Do not change GSEND -->
-<!-- Hotjar Tracking Code for https://www.wallando.de -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:2762693,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-  <!--CPC-->
-  <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-  <!--CPC-->
-  <script src='https://calcapi.printgrid.io/shopify/calculator.js'></script>
-
-
+    <!-- Hotjar Tracking Code for https://www.wallando.de -->
+    <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:2762693,hjsv:6};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+    <!-- CPC -->
+    <script async src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- CPC -->
+    <script async src="https://calcapi.printgrid.io/shopify/calculator.js"></script>
   </head>
 
   <body
@@ -188,6 +193,23 @@
     data-shop-url="{{ shop.url }}"
     data-predictive-search="{{ settings.enable_autocomplete }}"
   >
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59SZRJNT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <script type="text/javascript" data-cmp-ab="1">
+      window.cmp_customlanguages = [{"l":"EN","i":"en","r":0,"t":"EN"},{"l":"FR","i":"fr","r":0,"t":"FR"}];
+    </script>
+
+    <script
+      async
+      type="text/javascript"
+      data-cmp-ab="1"
+      src="https://cdn.consentmanager.net/delivery/autoblocking/fa7e1bf7a10f7.js"
+      data-cmp-host="b.delivery.consentmanager.net"
+      data-cmp-cdn="cdn.consentmanager.net"
+      data-cmp-codesrc="0"
+    ></script>
     <script src="https://widget.reviews.io/carousel-inline-iframeless/dist.js?_t=2023120412"></script>
     <link rel="stylesheet" href="https://assets.reviews.io/css/widgets/carousel-widget.css?_t=2023120412">
     <link rel="stylesheet" href="https://assets.reviews.io/iconfont/reviewsio-icons/style.css?_t=2023120412">

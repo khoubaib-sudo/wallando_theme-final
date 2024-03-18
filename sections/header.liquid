@@ -53,7 +53,7 @@
 window.varify = window.varify || {};
 window.varify.iid = 1445;
 </script>
-<script src="https://app.varify.io/varify.js"></script> 
+<script async src="https://app.varify.io/varify.js"></script> 
 
 
 {% assign announcement_home = false %}
@@ -168,6 +168,7 @@ window.varify.iid = 1445;
                       {% endfor %}
                       <button class="disclosure__submit" type="submit">{{ 'general.currency.submit_button_label' | t }}</button>
                     </div>
+                    </details>
                 {%- endform -%}
               </noscript>
               
@@ -213,13 +214,8 @@ window.varify.iid = 1445;
   </nav>
 {% endif %}
 
-<header
-  class="
-    site-header
-    {% if section.settings.fixed_header %}site-header--sticky{% endif %}
-  "
-  data-site-header
->
+<header class="site-header {% if section.settings.fixed_header or template.name == 'index' %}site-header--sticky{% endif %}" data-site-header>
+
   <div
     class="
       site-header__wrapper
@@ -262,29 +258,23 @@ window.varify.iid = 1445;
         "
         aria-label="{{ shop.name }}"
       >
-        {% if section.settings.logo %}
-          <div class="site-header__logo-image">
-            {%
-              render 'rimg',
-              img: section.settings.logo,
-              size: logo_width,
-              lazy: false,
-              canvas: true
-            %}
-          </div>
+      <div class="site-header__logo-image">
+ <img src="https://cdn.shopify.com/s/files/1/0528/9417/1326/files/logo-yellowZeichenflache_1_4ef1b67d-9bab-4726-ad7c-038afc5ebfad.png?v=1652180723" alt="Shop Logo" width="200" height="100" style="max-width: 100%; height: auto;">
+</div>
 
-          {% if section.settings.logo_home %}
-            <div class="site-header__transparent-image">
-              {%
-                render 'rimg',
-                img: section.settings.logo_home,
-                size: logo_width,
-                lazy: false,
-                canvas: true
-              %}
-            </div>
-          {% endif %}
-        {% endif %}
+{% if section.settings.logo_home %}
+  <div class="site-header__transparent-image">
+    <!-- Keep or update this section if necessary, else remove if not using a different logo for the homepage -->
+    {%
+      render 'rimg',
+      img: section.settings.logo_home,
+      size: logo_width,
+      lazy: false,
+      canvas: true
+    %}
+  </div>
+{% endif %}
+
 
         {% if mobile_logo %}
           <div class="site-header__mobile-image">

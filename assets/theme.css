@@ -3145,6 +3145,7 @@ a.sidebar__blog-tag:focus {
   animation: priceChangeAnimation 1s ease-out;
 }
 
+
 .tax-notice {
   white-space: nowrap; /* Prevents the text from wrapping */
 }
@@ -9782,6 +9783,20 @@ input[type="text"].search-template__form-input {
     height: 31.25rem;
   }
 }
+.site-header--sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50; /* Adjust based on your site's specific needs */
+}
+.site-header {
+  background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for desired transparency */
+  backdrop-filter: blur(10px); /* This creates the glassy effect */
+}
+.hero-container { /* Replace with the actual class or ID of your hero section */
+  padding-top: 140px; /* Replace [HeaderHeight] with the actual height of your header */
+}
+
 @media screen and (max-width: 767px) {
   .slideshow--height-mobile-full .slideshow-slide {
     height: 100vh;
@@ -10258,8 +10273,8 @@ input[type="text"].search-template__form-input {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  background: #ffffff;
-  box-shadow: 0px 0px 30px 2px rgba(0, 0, 0, 0.11);
+  background: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(10px); 
   border-radius: 10px;
   padding: 1.5rem;
   -webkit-border-radius: 10px;
@@ -12227,6 +12242,8 @@ input[type="text"].search-template__form-input {
     padding: 0.75rem 56px;
   }
 }
+
+
 
 .site-header-utility {
   display: none;
@@ -18142,7 +18159,7 @@ p {
 }
 
 .info-container {
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 .title-container h1,
@@ -18698,7 +18715,8 @@ input:checked ~ .tab-content {
   box-shadow: 0px 0px 30px 2px rgba(0, 0, 0, 0.11);
   border-radius: 40px;
   margin-bottom: 2rem;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for desired transparency */
+  backdrop-filter: blur(10px); /* This creates the glassy effect */
 }
 
 .custom-ups__wrapper.vertical {
@@ -18932,7 +18950,7 @@ p.availability_text {
 
 .featured-collection__slideshow-wrapper:not(.flickity-enabled)
   .product-grid-item {
-  min-width: 33.33%;
+  min-width: 20%;
 }
 
 .small-image__text {
